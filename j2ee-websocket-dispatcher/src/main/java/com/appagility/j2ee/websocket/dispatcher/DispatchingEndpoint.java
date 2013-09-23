@@ -1,14 +1,12 @@
 package com.appagility.j2ee.websocket.dispatcher;
 
-import javax.websocket.Endpoint;
-import javax.websocket.EndpointConfig;
-import javax.websocket.MessageHandler;
-import javax.websocket.Session;
+import javax.websocket.*;
+import java.io.IOException;
 
 public class DispatchingEndpoint extends Endpoint
 {
     @Override
-    public void onOpen(Session session, EndpointConfig config)
+    public void onOpen(final Session session, EndpointConfig config)
     {
         System.out.println("onOpen");
 
@@ -18,7 +16,21 @@ public class DispatchingEndpoint extends Endpoint
             public void onMessage(String message)
             {
                 System.out.println("Received message");
+                try
+                {
+                    session.getBasicRemote().sendText(message + " Echoed");
+                }
+                catch (IOException e)
+                {
+                    throw new RuntimeException(e);
+                }
             }
         });
+    }
+
+    @Override
+    public void onClose(Session session, CloseReason closeReason)
+    {
+        System.out.println("onClose");
     }
 }
