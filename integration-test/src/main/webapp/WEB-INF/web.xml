@@ -5,7 +5,12 @@
 
 
     <listener>
-        <listener-class>com.appagility.j2ee.websocket.dispatcher.WebsocketDispatcher</listener-class>
+        <listener-class>com.appagility.j2ee.websocket.dispatcher.WebSocketDispatcher</listener-class>
     </listener>
+
+    <context-param>
+        <param-name>websocket.dispatcher.base.path</param-name>
+        <param-value>com.appagility.j2ee.websocket.dispatcher.it</param-value>
+    </context-param>
 
 </web-app>
