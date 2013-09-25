@@ -3,11 +3,13 @@ package com.appagility.j2ee.websocket.dispatcher.operation.executors;
 import com.appagility.j2ee.websocket.dispatcher.Repository;
 import com.appagility.j2ee.websocket.dispatcher.RepositoryFactory;
 import com.appagility.j2ee.websocket.dispatcher.ResourceConverter;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import javax.websocket.Session;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Map;
 
 public class ReadExecutor implements OperationExecutor
@@ -31,6 +33,44 @@ public class ReadExecutor implements OperationExecutor
     public void execute(JsonObject jsonObject, Session session) throws IOException
     {
         String resourceName = jsonObject.get("type").getAsString();
+
+        boolean hasId = jsonObject.has("id");
+
+        if(hasId) {
+
+            read(jsonObject, session, resourceName);
+
+        } else {
+
+            readAll(jsonObject, session, resourceName);
+        }
+
+    }
+
+    private void readAll(JsonObject jsonObject, Session session, String resourceName) throws IOException
+    {
+
+        Repository<Object,Object> repository = (Repository<Object, Object>) repositoryFactoryMap.get(resourceName).create();
+
+        Collection<Object> results = repository.findAll();
+
+        JsonObject response = new JsonObject();
+        response.addProperty("status", "success");
+
+        JsonArray resources = new JsonArray();
+
+        for(Object result : results) {
+
+            resources.add(resourceConverter.toJson(result));
+        }
+
+        response.add("resources", resources);
+
+        session.getBasicRemote().sendText(response.toString());
+    }
+
+    private void read(JsonObject jsonObject, Session session, String resourceName) throws IOException
+    {
         JsonPrimitive id = jsonObject.get("id").getAsJsonPrimitive();
 
         Repository<Object,Object> repository = (Repository<Object, Object>) repositoryFactoryMap.get(resourceName).create();
