@@ -5,6 +5,7 @@ import com.appagility.j2ee.websocket.dispatcher.ResourceConverter;
 import com.appagility.j2ee.websocket.dispatcher.WebSocketResource;
 import com.appagility.j2ee.websocket.dispatcher.operation.executors.CreationExecutor;
 import com.appagility.j2ee.websocket.dispatcher.operation.executors.OperationExecutor;
+import com.appagility.j2ee.websocket.dispatcher.operation.executors.ReadExecutor;
 import com.appagility.j2ee.websocket.dispatcher.operation.executors.ResourceListingExecutor;
 import com.google.common.collect.Lists;
 
@@ -36,7 +37,7 @@ public class ExecutorFactory
 
     public Map<String, OperationExecutor> create() {
 
-        List<OperationExecutor> executors = Lists.newArrayList(resourceListingExecutor(), creationExecutor());
+        List<OperationExecutor> executors = Lists.newArrayList(resourceListingExecutor(), creationExecutor(), readExecutor());
         Map<String, OperationExecutor> executorMap = new HashMap<>();
 
         for(OperationExecutor operationExecutor : executors) {
@@ -55,6 +56,11 @@ public class ExecutorFactory
     private CreationExecutor creationExecutor() {
 
         return new CreationExecutor(resourceConverter, nameToResourceFactory);
+    }
+
+    private ReadExecutor readExecutor() {
+
+        return new ReadExecutor(resourceConverter, nameToResourceFactory);
     }
 
 }

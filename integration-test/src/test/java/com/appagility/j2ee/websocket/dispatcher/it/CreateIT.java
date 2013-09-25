@@ -10,7 +10,7 @@ import java.util.List;
 public class CreateIT extends TestClientEndpoint
 {
     //TODO This will be unknow so may have to do a getAll before this to find out what's expected
-    private static Long EXPECTED_ID = 0L;
+    private static Long EXPECTED_ID = 1L;
 
     @Test
     public void createItem() throws Exception {
