@@ -33,7 +33,7 @@ public class ReadIT extends TestClientEndpoint
 
         JsonObject response = new JsonParser().parse(readAllResponses.get(0)).getAsJsonObject();
 
-        assertSuccess(response);
+        AssertionHelpers.assertSuccess(response);
 
         JsonArray resourceArray = response.get("resources").getAsJsonArray();
 
@@ -68,15 +68,9 @@ public class ReadIT extends TestClientEndpoint
     private Long getId(String response) {
 
         JsonObject responseJson = new JsonParser().parse(response).getAsJsonObject();
-        assertSuccess(responseJson);
+        AssertionHelpers.assertSuccess(responseJson);
         return  responseJson.getAsJsonObject("resource").get("id").getAsLong();
 
-    }
-
-    private void assertSuccess(JsonObject jsonObject) {
-
-        String status = jsonObject.get("status").getAsString();
-        Assert.assertEquals("success", status);
     }
 
     private Predicate<JsonElement> hasIdOf(final Long id) {

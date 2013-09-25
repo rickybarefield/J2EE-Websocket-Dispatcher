@@ -1,5 +1,6 @@
 package com.appagility.j2ee.websocket.dispatcher.it;
 
+import com.google.gson.JsonObject;
 import org.glassfish.tyrus.client.ClientManager;
 import org.junit.After;
 import org.junit.Assert;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public abstract class TestClientEndpoint extends Endpoint
+public class TestClientEndpoint extends Endpoint
 {
     protected static String OPERATION = "operation";
 
