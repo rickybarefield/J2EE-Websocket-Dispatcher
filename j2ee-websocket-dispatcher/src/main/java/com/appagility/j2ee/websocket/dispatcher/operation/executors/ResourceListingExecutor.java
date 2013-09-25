@@ -1,5 +1,6 @@
-package com.appagility.j2ee.websocket.dispatcher;
+package com.appagility.j2ee.websocket.dispatcher.operation.executors;
 
+import com.appagility.j2ee.websocket.dispatcher.WebSocketResource;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;

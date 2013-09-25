@@ -1,11 +1,14 @@
 package com.appagility.j2ee.websocket.dispatcher;
 
+import com.appagility.j2ee.websocket.dispatcher.operation.ExecutorFactory;
+import com.appagility.j2ee.websocket.dispatcher.operation.executors.OperationExecutor;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.websocket.DeploymentException;
 import javax.websocket.server.ServerContainer;
 import javax.websocket.server.ServerEndpointConfig;
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
 
 public class WebSocketDispatcher implements ServletContextListener
 {
@@ -21,26 +24,20 @@ public class WebSocketDispatcher implements ServletContextListener
 
         Set<Class<?>> resourceClasses = new ResourceScanner(basePath).findResourceClasses();
 
-        Set<WebSocketResource> resourceAnnotations = new HashSet<>();
-
-        for(Class<?> clazz: resourceClasses) {
-
-            resourceAnnotations.add(clazz.getAnnotation(WebSocketResource.class));
-        }
 
         ServerContainer serverContainer = (ServerContainer) sce.getServletContext().getAttribute("javax.websocket.server.ServerContainer");
 
-        Map<String, OperationExecutor> operationExecutors = new HashMap<>();
-        operationExecutors.put("list-resources", new ResourceListingExecutor(resourceAnnotations));
-
-
-        ServerEndpointConfig endpoint = ServerEndpointConfig.Builder.create(DispatchingEndpoint.class, "/websocket").configurator(new EndpointConfigurator(operationExecutors)).build();
 
         try
         {
+            ExecutorFactory executorFactory = new ExecutorFactory(resourceClasses);
+            Map<String, OperationExecutor> executorMap = executorFactory.create();
+
+            ServerEndpointConfig endpoint = ServerEndpointConfig.Builder.create(DispatchingEndpoint.class, "/websocket").configurator(new EndpointConfigurator(executorMap)).build();
+
             serverContainer.addEndpoint(endpoint);
         }
-        catch (DeploymentException e)
+        catch (Exception e)
         {
             throw new RuntimeException(e);
         }

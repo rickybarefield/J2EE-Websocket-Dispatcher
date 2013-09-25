@@ -1,4 +1,4 @@
-package com.appagility.j2ee.websocket.dispatcher;
+package com.appagility.j2ee.websocket.dispatcher.operation.executors;
 
 import com.google.gson.JsonObject;
 

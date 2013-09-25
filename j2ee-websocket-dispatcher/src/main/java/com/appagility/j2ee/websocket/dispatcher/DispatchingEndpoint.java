@@ -1,16 +1,12 @@
 package com.appagility.j2ee.websocket.dispatcher;
 
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Iterables;
-import com.google.gson.Gson;
+import com.appagility.j2ee.websocket.dispatcher.operation.executors.OperationExecutor;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpointConfig;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class DispatchingEndpoint extends Endpoint

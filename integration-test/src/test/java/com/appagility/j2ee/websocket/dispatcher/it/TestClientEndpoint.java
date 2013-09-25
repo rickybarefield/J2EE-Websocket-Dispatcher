@@ -16,6 +16,8 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class TestClientEndpoint extends Endpoint
 {
+    protected static String OPERATION = "operation";
+
     private CountDownLatch openLatch = new CountDownLatch(1);
     private CountDownLatch messagesLatch;
     private List<String> messagesReceived = new ArrayList<>();
