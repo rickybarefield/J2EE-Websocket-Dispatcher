@@ -1,15 +1,12 @@
 package com.appagility.j2ee.websocket.dispatcher.it;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class ReadIT extends TestClientEndpoint
@@ -33,14 +30,14 @@ public class ReadIT extends TestClientEndpoint
 
         JsonObject response = new JsonParser().parse(readAllResponses.get(0)).getAsJsonObject();
 
-        AssertionHelpers.assertSuccess(response);
+        JsonHelpers.assertSuccess(response);
 
         JsonArray resourceArray = response.get("resources").getAsJsonArray();
 
         Assert.assertTrue("There should have been at least the two items created above returned", resourceArray.size() >= 2);
 
-        JsonObject resource0 = (JsonObject) Iterables.find(resourceArray, hasIdOf(0L));
-        JsonObject resource1 = (JsonObject) Iterables.find(resourceArray, hasIdOf(1L));
+        JsonObject resource0 = (JsonObject) Iterables.find(resourceArray, JsonHelpers.hasIdOf(id0));
+        JsonObject resource1 = (JsonObject) Iterables.find(resourceArray, JsonHelpers.hasIdOf(id1));
 
 
         Assert.assertEquals("ReadAllItem0", resource0.get("name").getAsString());
@@ -68,20 +65,9 @@ public class ReadIT extends TestClientEndpoint
     private Long getId(String response) {
 
         JsonObject responseJson = new JsonParser().parse(response).getAsJsonObject();
-        AssertionHelpers.assertSuccess(responseJson);
+        JsonHelpers.assertSuccess(responseJson);
         return  responseJson.getAsJsonObject("resource").get("id").getAsLong();
 
     }
 
-    private Predicate<JsonElement> hasIdOf(final Long id) {
-
-        return new Predicate<JsonElement>()
-        {
-            @Override
-            public boolean apply(@Nullable JsonElement jsonElement)
-            {
-                return jsonElement.getAsJsonObject().get("id").getAsLong() == id.longValue();
-            }
-        };
-    }
 }

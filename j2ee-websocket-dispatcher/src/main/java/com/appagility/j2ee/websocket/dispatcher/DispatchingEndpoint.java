@@ -11,6 +11,8 @@ import java.util.Map;
 
 public class DispatchingEndpoint extends Endpoint
 {
+    private WebSocketDispatcher.EndpointConfigurator endpointConfigurator;
+
     public DispatchingEndpoint() {
 
     }
@@ -20,7 +22,12 @@ public class DispatchingEndpoint extends Endpoint
     {
         System.out.println("onOpen!" + config.getClass());
 
-        session.addMessageHandler(new Handler(session, ((WebSocketDispatcher.EndpointConfigurator) ((ServerEndpointConfig) config).getConfigurator()).getOperationExecutors()));
+        if(endpointConfigurator == null) {
+
+            endpointConfigurator = ((WebSocketDispatcher.EndpointConfigurator) ((ServerEndpointConfig) config).getConfigurator());
+        }
+
+        session.addMessageHandler(new Handler(session, endpointConfigurator.getOperationExecutors()));
 
         System.out.println("Added handler");
     }
@@ -29,6 +36,11 @@ public class DispatchingEndpoint extends Endpoint
     public void onClose(Session session, CloseReason closeReason)
     {
         System.out.println("onClose");
+
+        for(OperationExecutor operationExecutor : endpointConfigurator.getOperationExecutors().values())
+        {
+            operationExecutor.handleSessionClose(session);
+        }
     }
 
 

@@ -9,7 +9,7 @@ import javax.websocket.Session;
 import java.io.IOException;
 import java.util.Set;
 
-public class ResourceListingExecutor implements OperationExecutor
+public class ResourceListingExecutor extends OperationExecutor
 {
 
     private final JsonArray jsonElements;

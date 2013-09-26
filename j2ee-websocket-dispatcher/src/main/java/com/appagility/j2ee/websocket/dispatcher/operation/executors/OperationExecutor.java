@@ -5,11 +5,15 @@ import com.google.gson.JsonObject;
 import javax.websocket.Session;
 import java.io.IOException;
 
-public interface OperationExecutor
+public abstract class OperationExecutor
 {
 
-    String getOperationName();
+    public abstract String getOperationName();
 
-    void execute(JsonObject jsonObject, Session session) throws IOException;
+    public abstract void execute(JsonObject jsonObject, Session session) throws IOException;
 
+    public void handleSessionClose(Session session) {
+
+        //nop
+    }
 }

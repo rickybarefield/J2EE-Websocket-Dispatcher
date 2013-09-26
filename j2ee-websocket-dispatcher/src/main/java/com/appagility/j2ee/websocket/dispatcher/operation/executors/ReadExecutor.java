@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
-public class ReadExecutor implements OperationExecutor
+public class ReadExecutor extends OperationExecutor
 {
     private final Map<String, RepositoryFactory<?>> repositoryFactoryMap;
     private final ResourceConverter resourceConverter;
