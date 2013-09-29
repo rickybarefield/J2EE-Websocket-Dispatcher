@@ -1,5 +1,6 @@
 package com.appagility.j2ee.websocket.dispatcher.operation.executors;
 
+import com.appagility.j2ee.websocket.dispatcher.Keys;
 import com.appagility.j2ee.websocket.dispatcher.Repository;
 import com.appagility.j2ee.websocket.dispatcher.RepositoryFactory;
 import com.appagility.j2ee.websocket.dispatcher.ResourceConverter;
@@ -79,7 +80,7 @@ public class ReadExecutor extends OperationExecutor
         JsonObject resourceAsJson = resourceConverter.toJson(read);
 
         JsonObject response = new JsonObject();
-        response.addProperty("status", "success");
+        response.addProperty(Keys.STATUS.value(), "success");
         response.add("resource", resourceAsJson);
 
         session.getBasicRemote().sendText(response.toString());

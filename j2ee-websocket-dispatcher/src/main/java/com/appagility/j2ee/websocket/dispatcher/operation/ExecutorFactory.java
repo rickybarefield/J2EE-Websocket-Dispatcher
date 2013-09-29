@@ -35,7 +35,7 @@ public class ExecutorFactory
     public Map<String, OperationExecutor> create() {
 
         List<OperationExecutor> executors = Lists.newArrayList(resourceListingExecutor(), creationExecutor(),
-                readExecutor(), subscribeExecutor());
+                readExecutor(), subscribeExecutor(), unsubscribeExecutor());
         Map<String, OperationExecutor> executorMap = new HashMap<>();
 
         for(OperationExecutor operationExecutor : executors) {
@@ -64,5 +64,10 @@ public class ExecutorFactory
     private SubscribeExecutor subscribeExecutor() {
 
         return new SubscribeExecutor(readExecutor(), resourceConverter);
+    }
+
+    private UnsubscribeExecutor unsubscribeExecutor() {
+
+        return new UnsubscribeExecutor();
     }
 }

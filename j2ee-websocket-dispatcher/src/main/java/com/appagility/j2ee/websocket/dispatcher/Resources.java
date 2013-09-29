@@ -21,6 +21,22 @@ public final class Resources
         }
     }
 
+    public static synchronized void unregisterListeners(String sessionId, String resourceName)
+    {
+        Map<String, ResourceListener<?>> listenersForResource = getListenersFor(resourceName);
+        listenersForResource.remove(sessionId);
+    }
+
+    public static void notifyCreate(String resourceName, Object resource)
+    {
+        Map<String, ResourceListener<?>> listenersBySessionId = getListenersFor(resourceName);
+
+        for(ResourceListener listener : listenersBySessionId.values()) {
+
+            listener.notifyCreate(resource);
+        }
+    }
+
     private static Map<String, ResourceListener<?>> getListenersFor(String resourceName)
     {
         Map<String, ResourceListener<?>> listenersBySessionId = listenersByResourceName.get(resourceName);
@@ -34,13 +50,4 @@ public final class Resources
         return listenersBySessionId;
     }
 
-    public static void notifyCreate(String resourceName, Object resource)
-    {
-        Map<String, ResourceListener<?>> listenersBySessionId = getListenersFor(resourceName);
-
-        for(ResourceListener listener : listenersBySessionId.values()) {
-
-            listener.notifyCreate(resource);
-        }
-    }
 }

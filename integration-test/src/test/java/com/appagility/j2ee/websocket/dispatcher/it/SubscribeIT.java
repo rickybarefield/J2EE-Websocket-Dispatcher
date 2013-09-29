@@ -10,28 +10,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SubscribeIT
+public class SubscribeIT extends SubscribeUnsubscribeBase
 {
-    private TestClientEndpoint subscribingClient = new TestClientEndpoint();
-    private TestClientEndpoint manipulatingClient = new TestClientEndpoint();
-
-    @Before
-    public void connectEndpoints() throws Exception {
-
-        subscribingClient.connect();
-        manipulatingClient.connect();
-    }
-
-    @After
-    public void disconnectEndpoints() throws Exception {
-
-        subscribingClient.disconnect();
-        manipulatingClient.disconnect();
-    }
-
     @Test
     public void existingResourceSentThroughOnSubscribe() throws Exception {
 
@@ -42,10 +26,7 @@ public class SubscribeIT
 
         List<Long> createdIds = Lists.newArrayList(Iterables.transform(createResponses, JsonHelpers.ID_OF_RESOURCE));
 
-        subscribingClient.expectMessages(1);
-        subscribingClient.sendMessage("{operation: 'subscribe', type: 'Item'}");
-        String subscribeResponse = subscribingClient.assertMessagesReceived("No response received for subscribe").get(0);
-        JsonHelpers.assertSuccess(subscribeResponse);
+        String subscribeResponse = subscribe();
 
         JsonArray resources = new JsonParser().parse(subscribeResponse).getAsJsonObject().getAsJsonArray("resources");
 
@@ -57,19 +38,12 @@ public class SubscribeIT
     @Test
     public void newResourcesSentThrough() throws Exception {
 
-        subscribingClient.expectMessages(1);
-        subscribingClient.sendMessage("{operation: 'subscribe', type: 'Item'}");
-        String subscribeResponse = subscribingClient.assertMessagesReceived("No response received for subscribe").get(0);
+        String subscribeResponse = subscribe();
         JsonHelpers.assertSuccess(subscribeResponse);
 
         subscribingClient.expectMessages(1);
 
-        manipulatingClient.expectMessages(1);
-        manipulatingClient.sendMessage("{operation: 'create', type: 'Item', resource: {name: 'ManipulatorCreated1'}}");
-
-        String createResponse = manipulatingClient.assertMessagesReceived("No response to the create").get(0);
-
-        Long idFromCreateResponse = new JsonParser().parse(createResponse).getAsJsonObject().getAsJsonObject("resource").get("id").getAsLong();
+        Long idFromCreateResponse = createWithManipulator("ManipulatorCreated1");
 
         JsonObject itemReceivedBySubscriber = new JsonParser().parse(subscribingClient.assertMessagesReceived("Subscribing client did not receive the new Item").get(0)).getAsJsonObject();
 

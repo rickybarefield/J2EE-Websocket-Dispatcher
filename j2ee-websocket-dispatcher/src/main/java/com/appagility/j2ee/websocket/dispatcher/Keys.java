@@ -6,6 +6,7 @@ public enum Keys
     RESOURCE_NAME("type"),
     RESOURCE("resource"),
     RESOURCES("resources"),
+    STATUS("status"),
 
     SUBSCRIBE("subscribe"),
     READ("read"),

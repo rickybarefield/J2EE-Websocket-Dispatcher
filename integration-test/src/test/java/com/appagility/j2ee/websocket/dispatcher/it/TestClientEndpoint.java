@@ -24,6 +24,8 @@ public class TestClientEndpoint extends Endpoint
     private List<String> messagesReceived = new ArrayList<>();
 
     private static final long TIMEOUT = 2000;
+    private static final long NEGATIVE_ASSERTION_TIMEOUT = 1000;
+
     private Session session;
 
     @Before
@@ -79,6 +81,13 @@ public class TestClientEndpoint extends Endpoint
         session.getBasicRemote().sendText(message);
     }
 
+    protected String operationWithTypeExpectingResponse(String failureMessage, String operation, String type) throws IOException, InterruptedException
+    {
+        expectMessages(1);
+        sendMessage("{operation: '" + operation + "', type: '" + type + "'}");
+        return assertMessagesReceived(failureMessage).get(0);
+    }
+
     protected List<String> assertMessagesReceived(String failureMessage) throws InterruptedException
     {
         boolean allMessagesReceived = messagesLatch.await(TIMEOUT, TimeUnit.MILLISECONDS);
@@ -86,9 +95,16 @@ public class TestClientEndpoint extends Endpoint
         return messagesReceived;
     }
 
+    protected synchronized void assertNoMessagesReceived(String failureMessage) throws InterruptedException {
+
+        boolean messageReceived = messagesLatch.await(NEGATIVE_ASSERTION_TIMEOUT, TimeUnit.MILLISECONDS);
+        Assert.assertFalse(failureMessage, messageReceived);
+    }
+
     protected synchronized void expectMessages(int numberExpected) {
 
-        messagesLatch = new CountDownLatch(numberExpected);
+        int numberExpectedOrOneForZero = numberExpected == 0 ? 1 : numberExpected;
+        messagesLatch = new CountDownLatch(numberExpectedOrOneForZero);
         messagesReceived = new ArrayList<>();
     }
 }

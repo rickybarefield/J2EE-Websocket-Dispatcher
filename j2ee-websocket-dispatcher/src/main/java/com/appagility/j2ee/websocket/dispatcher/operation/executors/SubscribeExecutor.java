@@ -36,12 +36,6 @@ public class SubscribeExecutor extends OperationExecutor
         Resources.registerListener(session.getId(), resourceName, new SubscribeListener<>(session));
     }
 
-    @Override
-    public void handleSessionClose(Session session)
-    {
-        Resources.unregisterListeners(session.getId());
-    }
-
     private class SubscribeListener<RESOURCE_TYPE> implements ResourceListener<RESOURCE_TYPE>
     {
         private Session session;
