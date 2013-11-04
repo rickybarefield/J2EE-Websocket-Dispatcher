@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class DispatchingEndpoint extends Endpoint
 {
-    private WebSocketDispatcher.EndpointConfigurator endpointConfigurator;
+    private ScrudContainerInitializer.EndpointConfigurator endpointConfigurator;
 
     public DispatchingEndpoint() {
 
@@ -24,7 +24,7 @@ public class DispatchingEndpoint extends Endpoint
 
         if(endpointConfigurator == null) {
 
-            endpointConfigurator = ((WebSocketDispatcher.EndpointConfigurator) ((ServerEndpointConfig) config).getConfigurator());
+            endpointConfigurator = ((ScrudContainerInitializer.EndpointConfigurator) ((ServerEndpointConfig) config).getConfigurator());
         }
 
         session.addMessageHandler(new Handler(session, endpointConfigurator.getOperationExecutors()));

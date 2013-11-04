@@ -15,9 +15,6 @@ import java.util.Set;
 @HandlesTypes(WebSocketResource.class)
 public class ScrudContainerInitializer implements ServletContainerInitializer
 {
-
-    //TODO
-
     @Override
     public void onStartup(Set<Class<?>> websocketResourceClasses, ServletContext servletContext) throws ServletException
     {
@@ -69,5 +66,4 @@ public class ScrudContainerInitializer implements ServletContainerInitializer
         }
 
     }
-
 }
