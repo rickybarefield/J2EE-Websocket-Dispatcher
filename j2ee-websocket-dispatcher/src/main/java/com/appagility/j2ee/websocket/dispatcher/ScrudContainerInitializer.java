@@ -3,9 +3,7 @@ package com.appagility.j2ee.websocket.dispatcher;
 import com.appagility.j2ee.websocket.dispatcher.operation.ExecutorFactory;
 import com.appagility.j2ee.websocket.dispatcher.operation.executors.OperationExecutor;
 
-import javax.servlet.ServletContainerInitializer;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
+import javax.servlet.*;
 import javax.servlet.annotation.HandlesTypes;
 import javax.websocket.server.ServerContainer;
 import javax.websocket.server.ServerEndpointConfig;
@@ -13,13 +11,16 @@ import java.util.Map;
 import java.util.Set;
 
 @HandlesTypes(WebSocketResource.class)
-public class ScrudContainerInitializer implements ServletContainerInitializer
+public class ScrudContainerInitializer implements ServletContainerInitializer, ServletContextListener
 {
+
+    private Map<String,OperationExecutor> executorMap;
+
     @Override
     public void onStartup(Set<Class<?>> websocketResourceClasses, ServletContext servletContext) throws ServletException
     {
-        Map<String, OperationExecutor> executorMap = createExecutorMap(websocketResourceClasses);
-        createEndpoint(servletContext, executorMap);
+        executorMap = createExecutorMap(websocketResourceClasses);
+        servletContext.addListener(this);
     }
 
     private Map<String, OperationExecutor> createExecutorMap(Set<Class<?>> websocketResourceClasses) throws ServletException
@@ -35,8 +36,9 @@ public class ScrudContainerInitializer implements ServletContainerInitializer
         }
     }
 
-    private void createEndpoint(ServletContext servletContext, Map<String, OperationExecutor> executorMap)
+    private void createEndpoint(ServletContext servletContext)
     {
+
         ServerContainer serverContainer = (ServerContainer) servletContext.getAttribute("javax.websocket.server.ServerContainer");
 
         try
@@ -49,6 +51,18 @@ public class ScrudContainerInitializer implements ServletContainerInitializer
             throw new RuntimeException(e);
         }
 
+    }
+
+    @Override
+    public void contextInitialized(ServletContextEvent sce)
+    {
+        createEndpoint(sce.getServletContext());
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent sce)
+    {
+        //TODO
     }
 
     public class EndpointConfigurator extends ServerEndpointConfig.Configurator {
