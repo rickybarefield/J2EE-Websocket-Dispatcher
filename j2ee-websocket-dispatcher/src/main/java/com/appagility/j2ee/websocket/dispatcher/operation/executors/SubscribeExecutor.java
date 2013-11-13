@@ -1,23 +1,25 @@
 package com.appagility.j2ee.websocket.dispatcher.operation.executors;
 
 import com.appagility.j2ee.websocket.dispatcher.Keys;
+import com.appagility.j2ee.websocket.dispatcher.RepositoryFactory;
 import com.appagility.j2ee.websocket.dispatcher.ResourceConverter;
-import com.appagility.j2ee.websocket.dispatcher.ResourceListener;
-import com.appagility.j2ee.websocket.dispatcher.Resources;
+import com.appagility.j2ee.websocket.dispatcher.ScrudEndpoint;
+import com.appagility.j2ee.websocket.dispatcher.subscription.SubscriptionAndCurrent;
 import com.google.gson.JsonObject;
 
 import javax.websocket.Session;
 import java.io.IOException;
+import java.util.Map;
 
 public class SubscribeExecutor extends OperationExecutor
 {
-    private final ReadExecutor readExecutor;
     private ResourceConverter resourceConverter;
+    private final Map<String, RepositoryFactory<?>> repositoryFactoryMap;
 
-    public SubscribeExecutor(ReadExecutor readExecutor, ResourceConverter resourceConverter)
+    public SubscribeExecutor(ResourceConverter resourceConverter, Map<String, RepositoryFactory<?>> repositoryFactoryMap)
     {
-        this.readExecutor = readExecutor;
         this.resourceConverter = resourceConverter;
+        this.repositoryFactoryMap = repositoryFactoryMap;
     }
 
     @Override
@@ -27,41 +29,18 @@ public class SubscribeExecutor extends OperationExecutor
     }
 
     @Override
-    public void execute(JsonObject jsonObject, Session session) throws IOException
+    public void execute(JsonObject jsonObject, ScrudEndpoint scrudEndpoint) throws IOException
     {
-        readExecutor.execute(jsonObject, session);
 
-        String resourceName = jsonObject.get(Keys.RESOURCE_NAME.value()).getAsString();
+        String clientId = jsonObject.get("clientId").getAsString();
+        String resourceName = jsonObject.get("type").getAsString();
+        RepositoryFactory<Object> repositoryFactory = (RepositoryFactory<Object>) nameToRepositoryFactory.get(resourceName);
 
-        Resources.registerListener(session.getId(), resourceName, new SubscribeListener<>(session));
+        SubscriptionAndCurrent subscriptionAndCurrent = repositoryFactoryMap.get(resourceName).create().getAndSubscribe(clientId);
+
+        scrudEndpoint.resources
+        subscriptionAndCurrent.getCurrent()
+        session.getBasicRemote().
     }
 
-    private class SubscribeListener<RESOURCE_TYPE> implements ResourceListener<RESOURCE_TYPE>
-    {
-        private Session session;
-
-        public SubscribeListener(Session session)
-        {
-            this.session = session;
-        }
-
-        @Override
-        public void notifyCreate(RESOURCE_TYPE resource)
-        {
-            JsonObject created = new JsonObject();
-            created.addProperty(Keys.OPERATION.value(), Keys.CREATE.value());
-            JsonObject jsonResource = resourceConverter.toJson(resource);
-            created.add(Keys.RESOURCE.value(), jsonResource);
-
-            try
-            {
-                session.getBasicRemote().sendText(created.toString());
-            }
-            catch (IOException e)
-            {
-                //TODO Think!
-                System.out.println(e.getMessage());
-            }
-        }
-    }
 }

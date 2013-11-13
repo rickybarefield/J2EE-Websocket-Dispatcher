@@ -81,10 +81,10 @@ public class TestClientEndpoint extends Endpoint
         session.getBasicRemote().sendText(message);
     }
 
-    protected String operationWithTypeExpectingResponse(String failureMessage, String operation, String type) throws IOException, InterruptedException
+    protected String subscribeExpectingResponse(String failureMessage, String type, String clientId) throws IOException, InterruptedException
     {
         expectMessages(1);
-        sendMessage("{operation: '" + operation + "', type: '" + type + "'}");
+        sendMessage("{operation: 'subscribe', type: '" + type + "', clientId: '" + clientId + "'}");
         return assertMessagesReceived(failureMessage).get(0);
     }
 

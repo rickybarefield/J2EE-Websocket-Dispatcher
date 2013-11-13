@@ -1,13 +1,13 @@
 package com.appagility.j2ee.websocket.dispatcher.subscription;
 
-import java.util.Set;
+import java.util.Collection;
 
 public class SubscriptionAndCurrent<ITEM>
 {
     private Subscription<ITEM> subscription;
-    private Set<ITEM> current;
+    private Collection<ITEM> current;
 
-    public SubscriptionAndCurrent(Subscription<ITEM> subscription, Set<ITEM> current)
+    public SubscriptionAndCurrent(Subscription<ITEM> subscription, Collection<ITEM> current)
     {
         this.subscription = subscription;
         this.current = current;
@@ -18,7 +18,7 @@ public class SubscriptionAndCurrent<ITEM>
         return subscription;
     }
 
-    public Set<ITEM> getCurrent()
+    public Collection<ITEM> getCurrent()
     {
         return current;
     }

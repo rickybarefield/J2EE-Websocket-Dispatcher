@@ -1,9 +1,9 @@
 package com.appagility.j2ee.websocket.dispatcher.operation.executors;
 
 import com.appagility.j2ee.websocket.dispatcher.Keys;
-import com.appagility.j2ee.websocket.dispatcher.Repository;
 import com.appagility.j2ee.websocket.dispatcher.RepositoryFactory;
 import com.appagility.j2ee.websocket.dispatcher.ResourceConverter;
+import com.appagility.j2ee.websocket.dispatcher.SubscribingRepository;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -50,40 +50,12 @@ public class ReadExecutor extends OperationExecutor
 
     private void readAll(JsonObject jsonObject, Session session, String resourceName) throws IOException
     {
-
-        Repository<Object,Object> repository = (Repository<Object, Object>) repositoryFactoryMap.get(resourceName).create();
-
-        Collection<Object> results = repository.findAll();
-
-        JsonObject response = new JsonObject();
-        response.addProperty("status", "success");
-
-        JsonArray resources = new JsonArray();
-
-        for(Object result : results) {
-
-            resources.add(resourceConverter.toJson(result));
-        }
-
-        response.add("resources", resources);
-
-        session.getBasicRemote().sendText(response.toString());
+        //TODO
     }
 
     private void read(JsonObject jsonObject, Session session, String resourceName) throws IOException
     {
-        JsonPrimitive id = jsonObject.get("id").getAsJsonPrimitive();
-
-        Repository<Object,Object> repository = (Repository<Object, Object>) repositoryFactoryMap.get(resourceName).create();
-        Object read = repository.find(fromJsonPrimitive(id));
-
-        JsonObject resourceAsJson = resourceConverter.toJson(read);
-
-        JsonObject response = new JsonObject();
-        response.addProperty(Keys.STATUS.value(), "success");
-        response.add("resource", resourceAsJson);
-
-        session.getBasicRemote().sendText(response.toString());
+        //TODO
     }
 
     private static Object fromJsonPrimitive(JsonPrimitive jsonPrimitive) {

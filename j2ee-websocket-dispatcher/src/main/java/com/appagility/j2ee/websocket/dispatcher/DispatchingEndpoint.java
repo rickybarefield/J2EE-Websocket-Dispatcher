@@ -68,7 +68,7 @@ public class DispatchingEndpoint extends Endpoint
 
             try
             {
-                operationExecutorMap.get(operation).execute(json, session);
+                operationExecutorMap.get(operation).execute(json, new ScrudEndpoint(session.getBasicRemote()));
             }
             catch (IOException e)
             {

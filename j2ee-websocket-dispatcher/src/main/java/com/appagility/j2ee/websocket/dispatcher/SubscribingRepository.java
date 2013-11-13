@@ -4,6 +4,7 @@ import com.appagility.j2ee.websocket.dispatcher.subscription.Subscription;
 import com.appagility.j2ee.websocket.dispatcher.subscription.SubscriptionAndCurrent;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -16,12 +17,12 @@ public abstract class SubscribingRepository<ID, ITEM>
 
     private Map<String, Subscription> subscriptions = new HashMap<>();
 
-    SubscriptionAndCurrent getAndSubscribe(String clientId)
+    public SubscriptionAndCurrent getAndSubscribe(String clientId)
     {
         try
         {
             readWriteLock.readLock().lock();
-            Set<ITEM> current = readAll();
+            Collection<ITEM> current = readAll();
             Subscription<ITEM> subscription = new Subscription<>(clientId);
             subscriptions.put(subscription.getServerId(), subscription);
 
@@ -64,7 +65,7 @@ public abstract class SubscribingRepository<ID, ITEM>
 
     }
 
-    protected abstract ITEM create(ITEM item);
-    protected abstract Set<ITEM> readAll();
+    public abstract ITEM create(ITEM item);
+    protected abstract Collection<ITEM> readAll();
     //TODO read / update / delete
 }

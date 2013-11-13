@@ -63,7 +63,7 @@ public class ExecutorFactory
 
     private SubscribeExecutor subscribeExecutor() {
 
-        return new SubscribeExecutor(readExecutor(), resourceConverter);
+        return new SubscribeExecutor(resourceConverter, nameToResourceFactory);
     }
 
     private UnsubscribeExecutor unsubscribeExecutor() {

@@ -1,5 +1,6 @@
 package com.appagility.j2ee.websocket.dispatcher.operation.executors;
 
+import com.appagility.j2ee.websocket.dispatcher.ScrudEndpoint;
 import com.google.gson.JsonObject;
 
 import javax.websocket.Session;
@@ -10,7 +11,7 @@ public abstract class OperationExecutor
 
     public abstract String getOperationName();
 
-    public abstract void execute(JsonObject jsonObject, Session session) throws IOException;
+    public abstract void execute(JsonObject jsonObject, ScrudEndpoint scrudEndpoint) throws IOException;
 
     public void handleSessionClose(Session session) {
 

@@ -2,7 +2,6 @@ package com.appagility.j2ee.websocket.dispatcher.operation.executors;
 
 import com.appagility.j2ee.websocket.dispatcher.RepositoryFactory;
 import com.appagility.j2ee.websocket.dispatcher.ResourceConverter;
-import com.appagility.j2ee.websocket.dispatcher.Resources;
 import com.google.gson.JsonObject;
 
 import javax.websocket.Session;
@@ -35,9 +34,7 @@ public class CreationExecutor extends OperationExecutor
 
         Object resource = resourceConverter.fromJson(resourceName, resourceJson);
         RepositoryFactory<Object> repositoryFactory = (RepositoryFactory<Object>) nameToRepositoryFactory.get(resourceName);
-        Object persisted = repositoryFactory.create().persist(resource);
-
-        Resources.notifyCreate(resourceName, persisted);
+        Object persisted = repositoryFactory.create().create(resource);
 
         JsonObject persistedJson = resourceConverter.toJson(persisted);
 
