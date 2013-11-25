@@ -14,12 +14,12 @@ Subscriptions are initiated by the client with a subscribe with the following pr
   <tr>
     <th>Name</th>
     <th>Type</th>
-    <th>Description or <b>Content</b></th>
+    <th>Description or <em>Content</em></th>
   </tr>
   <tr>
     <td>message-type</td>
     <td>String</td>
-    <td><b>subscribe</b></td>
+    <td><em>subscribe</em></td>
   </tr>
   <tr>
     <td>client-id</td>
@@ -39,12 +39,12 @@ A reply will be sent for a successful subscription with the following properties
   <tr>
     <th>Name</th>
     <th>Type</th>
-    <th>Description or <b>Content</b></th>
+    <th>Description or <em>Content</em></th>
   </tr>
   <tr>
     <td>message-type</td>
     <td>String</td>
-    <td><b>subscription-success</b></td>
+    <td><em>subscription-success</em></td>
   </tr>
   <tr>
     <td>client-id</td>
