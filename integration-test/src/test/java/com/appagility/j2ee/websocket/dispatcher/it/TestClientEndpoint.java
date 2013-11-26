@@ -1,6 +1,5 @@
 package com.appagility.j2ee.websocket.dispatcher.it;
 
-import com.google.gson.JsonObject;
 import org.glassfish.tyrus.client.ClientManager;
 import org.junit.After;
 import org.junit.Assert;
@@ -14,10 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class TestClientEndpoint extends Endpoint
 {
     protected static String OPERATION = "operation";
+
+    private AtomicLong idBase = new AtomicLong();
 
     private CountDownLatch openLatch = new CountDownLatch(1);
     private CountDownLatch messagesLatch;
@@ -81,13 +83,6 @@ public class TestClientEndpoint extends Endpoint
         session.getBasicRemote().sendText(message);
     }
 
-    protected String subscribeExpectingResponse(String failureMessage, String type, String clientId) throws IOException, InterruptedException
-    {
-        expectMessages(1);
-        sendMessage("{operation: 'subscribe', type: '" + type + "', clientId: '" + clientId + "'}");
-        return assertMessagesReceived(failureMessage).get(0);
-    }
-
     protected List<String> assertMessagesReceived(String failureMessage) throws InterruptedException
     {
         boolean allMessagesReceived = messagesLatch.await(TIMEOUT, TimeUnit.MILLISECONDS);
@@ -106,5 +101,30 @@ public class TestClientEndpoint extends Endpoint
         int numberExpectedOrOneForZero = numberExpected == 0 ? 1 : numberExpected;
         messagesLatch = new CountDownLatch(numberExpectedOrOneForZero);
         messagesReceived = new ArrayList<>();
+    }
+
+    public String subscribeExpectingSuccess() throws IOException, InterruptedException
+    {
+        expectMessages(1);
+        String clientId = createClientId();
+        sendMessage("{message-type: 'subscribe', resource-type: 'Item', client-id: '" + clientId + "'}");
+        String response = assertMessagesReceived("No response for subscribe").get(0);
+        Assert.assertTrue("Message was received for subscribe but was not a subscription-success, was instead " + response, response.contains("message-type: 'subscription-success'"));
+        return response;
+    }
+
+    private String createClientId()
+    {
+        return "myId-" + idBase.incrementAndGet();
+    }
+
+    public String createExpectingSuccess(String itemName) throws IOException, InterruptedException
+    {
+        expectMessages(1);
+        String clientId = createClientId();
+        sendMessage("{message-type: 'create', client-id: '" + clientId + "', resource-type: 'Item', resource: {name: '" + itemName  + "'}}");
+        String response = assertMessagesReceived("No response for create").get(0);
+        Assert.assertTrue("Message was received for creation but was not a create-success, was instead " + response, response.contains("message-type: 'create-success'"));
+        return response;
     }
 }

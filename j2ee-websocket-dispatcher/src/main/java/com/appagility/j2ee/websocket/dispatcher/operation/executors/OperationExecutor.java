@@ -9,7 +9,7 @@ import java.io.IOException;
 public abstract class OperationExecutor
 {
 
-    public abstract String getOperationName();
+    public abstract String getMessageType();
 
     public abstract void execute(JsonObject jsonObject, ScrudEndpoint scrudEndpoint) throws IOException;
 

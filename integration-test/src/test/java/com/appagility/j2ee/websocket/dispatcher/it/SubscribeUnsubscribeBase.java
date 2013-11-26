@@ -25,16 +25,6 @@ public class SubscribeUnsubscribeBase
         manipulatingClient.disconnect();
     }
 
-    protected String subscribe() throws IOException, InterruptedException
-    {
-        return subscribingClient.operationWithTypeExpectingResponse("No response received for subscribe", "subscribe", "Item");
-    }
-
-    protected String unsubscribe() throws IOException, InterruptedException
-    {
-        return subscribingClient.operationWithTypeExpectingResponse("No response received for unsubscribe", "unsubscribe", "Item");
-    }
-
     protected Long createWithManipulator(String name) throws IOException, InterruptedException
     {
         manipulatingClient.expectMessages(1);

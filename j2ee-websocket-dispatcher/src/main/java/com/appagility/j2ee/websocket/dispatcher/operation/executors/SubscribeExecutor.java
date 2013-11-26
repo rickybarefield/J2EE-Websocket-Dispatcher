@@ -23,7 +23,7 @@ public class SubscribeExecutor extends OperationExecutor
     }
 
     @Override
-    public String getOperationName()
+    public String getMessageType()
     {
         return Keys.SUBSCRIBE.value();
     }
@@ -31,16 +31,11 @@ public class SubscribeExecutor extends OperationExecutor
     @Override
     public void execute(JsonObject jsonObject, ScrudEndpoint scrudEndpoint) throws IOException
     {
-
         String clientId = jsonObject.get("clientId").getAsString();
         String resourceName = jsonObject.get("type").getAsString();
-        RepositoryFactory<Object> repositoryFactory = (RepositoryFactory<Object>) nameToRepositoryFactory.get(resourceName);
-
         SubscriptionAndCurrent subscriptionAndCurrent = repositoryFactoryMap.get(resourceName).create().getAndSubscribe(clientId);
+        scrudEndpoint.subscriptionSuccess(clientId, subscriptionAndCurrent.getCurrent());
 
-        scrudEndpoint.resources
-        subscriptionAndCurrent.getCurrent()
-        session.getBasicRemote().
     }
 
 }

@@ -40,7 +40,7 @@ public final class JsonHelpers
         @Override
         public Long apply(String json)
         {
-            return  new JsonParser().parse(json).getAsJsonObject().getAsJsonObject("resource").get("id").getAsLong();
+            return  new JsonParser().parse(json).getAsJsonObject().get("resource-id").getAsLong();
         }
     };
 
@@ -49,7 +49,7 @@ public final class JsonHelpers
         @Override
         public Long apply(JsonElement jsonElement)
         {
-            return jsonElement.getAsJsonObject().get("id").getAsLong();
+            return jsonElement.getAsJsonObject().get("resource-id").getAsLong();
         }
     };
 }

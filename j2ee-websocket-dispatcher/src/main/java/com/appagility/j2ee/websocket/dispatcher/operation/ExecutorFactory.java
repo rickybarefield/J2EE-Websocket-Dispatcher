@@ -40,7 +40,7 @@ public class ExecutorFactory
 
         for(OperationExecutor operationExecutor : executors) {
 
-            executorMap.put(operationExecutor.getOperationName(), operationExecutor);
+            executorMap.put(operationExecutor.getMessageType(), operationExecutor);
         }
 
         return executorMap;

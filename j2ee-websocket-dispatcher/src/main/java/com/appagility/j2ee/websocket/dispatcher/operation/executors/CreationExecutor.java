@@ -2,6 +2,7 @@ package com.appagility.j2ee.websocket.dispatcher.operation.executors;
 
 import com.appagility.j2ee.websocket.dispatcher.RepositoryFactory;
 import com.appagility.j2ee.websocket.dispatcher.ResourceConverter;
+import com.appagility.j2ee.websocket.dispatcher.ScrudEndpoint;
 import com.google.gson.JsonObject;
 
 import javax.websocket.Session;
@@ -21,27 +22,14 @@ public class CreationExecutor extends OperationExecutor
     }
 
     @Override
-    public String getOperationName()
+    public String getMessageType()
     {
         return "create";
     }
 
     @Override
-    public void execute(JsonObject jsonObject, Session session) throws IOException
+    public void execute(JsonObject jsonObject, ScrudEndpoint scrudEndpoint) throws IOException
     {
-        JsonObject resourceJson = jsonObject.getAsJsonObject("resource");
-        String resourceName = jsonObject.get("type").getAsString();
-
-        Object resource = resourceConverter.fromJson(resourceName, resourceJson);
-        RepositoryFactory<Object> repositoryFactory = (RepositoryFactory<Object>) nameToRepositoryFactory.get(resourceName);
-        Object persisted = repositoryFactory.create().create(resource);
-
-        JsonObject persistedJson = resourceConverter.toJson(persisted);
-
-        JsonObject response = new JsonObject();
-        response.addProperty("status", "success");
-        response.add("resource", persistedJson);
-
-        session.getBasicRemote().sendText(response.toString());
+        //TODO
     }
 }

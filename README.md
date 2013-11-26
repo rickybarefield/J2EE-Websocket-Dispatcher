@@ -235,6 +235,11 @@ To create a resource the client sends a message with the following properties:
     <td>A string which will be included in the server's response</td>
   </tr>
   <tr>
+    <td>resource-type</td>
+    <td>String</td>
+    <td>The type of resource for the subscription</td>
+  </tr>
+  <tr>
     <td>resource</td>
     <td>Object</td>
     <td>The resource to create</td>
