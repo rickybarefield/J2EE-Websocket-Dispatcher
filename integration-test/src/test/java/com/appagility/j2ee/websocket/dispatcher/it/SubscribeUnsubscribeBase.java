@@ -24,15 +24,4 @@ public class SubscribeUnsubscribeBase
         subscribingClient.disconnect();
         manipulatingClient.disconnect();
     }
-
-    protected Long createWithManipulator(String name) throws IOException, InterruptedException
-    {
-        manipulatingClient.expectMessages(1);
-        manipulatingClient.sendMessage("{operation: 'create', type: 'Item', resource: {name: '" + name + "'}}");
-
-        String createResponse = manipulatingClient.assertMessagesReceived("No response to the create").get(0);
-
-        return new JsonParser().parse(createResponse).getAsJsonObject().getAsJsonObject("resource").get("id").getAsLong();
-    }
-
 }

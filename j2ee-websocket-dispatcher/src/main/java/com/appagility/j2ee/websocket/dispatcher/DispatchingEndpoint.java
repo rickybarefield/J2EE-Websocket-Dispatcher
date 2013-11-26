@@ -62,13 +62,13 @@ public class DispatchingEndpoint extends Endpoint
 
             JsonObject json = new JsonParser().parse(message).getAsJsonObject();
 
-            String operation = json.get("operation").getAsString();
+            String messageType = json.get("message-type").getAsString();
 
-            System.out.println("Operation: " + operation);
+            System.out.println("messageType: " + messageType);
 
             try
             {
-                operationExecutorMap.get(operation).execute(json, new ScrudEndpoint(session.getBasicRemote()));
+                operationExecutorMap.get(messageType).execute(json, new ScrudEndpoint(session.getBasicRemote()));
             }
             catch (IOException e)
             {

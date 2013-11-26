@@ -13,8 +13,6 @@ public class ScrudEndpoint
 
     private static final String clientId = "client-id";
 
-
-
     public ScrudEndpoint(RemoteEndpoint.Basic remoteEndpoint)
     {
         this.remoteEndpoint = remoteEndpoint;
