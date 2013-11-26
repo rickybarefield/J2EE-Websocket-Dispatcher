@@ -99,7 +99,7 @@ Once a subscription is active the server can send a message indicating a new mat
   <tr>
     <td>resource</td>
     <td>Object</td>
-    <td>The newly created object</td>
+    <td>The newly created resource</td>
   </tr>
 </table>
 
@@ -214,3 +214,79 @@ When a subscription is active a client may choose to end that subscription:
 
 No response is sent from the server, whilst it is being processed additional messages relating to the subscription could be received but can be ignored.
 
+### Create ###
+
+To create a resource the client sends a message with the following properties:
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Description or <em>Content</em></th>
+  </tr>
+  <tr>
+    <td>message-type</td>
+    <td>String</td>
+    <td><em>create</em></td>
+  </tr>
+  <tr>
+    <td>client-id</td>
+    <td>String</td>
+    <td>A string which will be included in the server's response</td>
+  </tr>
+  <tr>
+    <td>resource</td>
+    <td>Object</td>
+    <td>The resource to create</td>
+  </tr>
+</table>
+
+The response for a successful creation will have the following properties:
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Description or <em>Content</em></th>
+  </tr>
+  <tr>
+    <td>message-type</td>
+    <td>String</td>
+    <td><em>create-success</em></td>
+  </tr>
+  <tr>
+    <td>client-id</td>
+    <td>String</td>
+    <td>The client-id provided by the client in the create message</td>
+  </tr>
+  <tr>
+    <td>resource-id</td>
+    <td>String</td>
+    <td>The server side id of the newly created resource</td>
+  </tr>
+  <tr>
+    <td>resource</td>
+    <td>Object</td>
+    <td>The newly created resource</td>
+  </tr>
+</table>
+
+The response if the create failed will contain the following:
+
+TODO
+
+### Read ###
+
+TODO
+
+### Update ###
+
+TODO
+
+### Delete ###
+
+TODO
+
+## Restrictions ##
+
++ If a client has a subscription to a resource type and then creates a resource of that type the server will need to send two messages to the client, _created_ and _create-success_.  The _created_ message must be sent by the server first, this allows the client to avoid creating duplicate objects to represent a resource.
