@@ -11,7 +11,6 @@ public class ScrudEndpoint
 {
     RemoteEndpoint.Basic remoteEndpoint;
 
-    private static final String clientId = "client-id";
 
     public ScrudEndpoint(RemoteEndpoint.Basic remoteEndpoint)
     {
@@ -24,17 +23,27 @@ public class ScrudEndpoint
     }
 
 
-    public void created(String clientSubscriptionId, Object item) throws IOException
+    public void created(String clientSubscriptionId, Object createdResource) throws IOException
+    {
+        clientIdAndResource(MessageType.CREATED, clientSubscriptionId, createdResource);
+    }
+
+    public void createSuccess(String clientId, Object createdResource) throws IOException
+    {
+        clientIdAndResource(MessageType.CREATE_SUCCESS, clientId, createdResource);
+    }
+
+    private void clientIdAndResource(MessageType messageType, String clientId, Object resource) throws IOException
     {
         Gson gson = new Gson();
-        JsonObject itemJson = gson.toJsonTree(item).getAsJsonObject();
+        JsonObject itemJson = gson.toJsonTree(resource).getAsJsonObject();
 
         JsonObject object = new JsonObject();
-        addMessageType(object, MessageType.CREATED);
-        object.addProperty("client-id", clientSubscriptionId);
+        addMessageType(object, messageType);
+        object.addProperty("client-id", clientId);
         object.add("resource", itemJson);
 
-        remoteEndpoint.sendText(object.getAsString());
+        remoteEndpoint.sendText(object.toString());
     }
 
     public void subscriptionSuccess(String clientSubscriptionId, Collection<Object> existingResources)
@@ -46,4 +55,5 @@ public class ScrudEndpoint
         //TODO You are here, need to create resources as array then call from SubscribeExecutor
         //TODO SubscribeIT needs to work
     }
+
 }

@@ -41,6 +41,6 @@ public class CreationExecutor extends OperationExecutor
 
         Object createdResource = subscribingRepository.create(resource);
 
-        scrudEndpoint.created(clientId, createdResource);
+        scrudEndpoint.createSuccess(clientId, createdResource);
     }
 }

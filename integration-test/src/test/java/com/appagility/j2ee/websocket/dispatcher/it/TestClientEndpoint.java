@@ -124,7 +124,7 @@ public class TestClientEndpoint extends Endpoint
         String clientId = createClientId();
         sendMessage("{message-type: 'create', client-id: '" + clientId + "', resource-type: 'Item', resource: {name: '" + itemName  + "'}}");
         String response = assertMessagesReceived("No response for create").get(0);
-        Assert.assertTrue("Message was received for creation but was not a create-success, was instead " + response, response.contains("message-type: 'create-success'"));
+        Assert.assertTrue("Message was received for creation but was not a create-success, was instead " + response, response.contains("create-success"));
         return response;
     }
 }

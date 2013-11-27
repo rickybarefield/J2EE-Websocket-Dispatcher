@@ -12,8 +12,10 @@ public enum MessageType
     SUBSCRIBE("subscribe"),
 
     SUBSCRIPTION_SUCCESS("subscription-success"),
-    CREATED("created");
 
+    CREATED("created"),
+
+    CREATE_SUCCESS("create-success");
 
     private String messageType;
 
