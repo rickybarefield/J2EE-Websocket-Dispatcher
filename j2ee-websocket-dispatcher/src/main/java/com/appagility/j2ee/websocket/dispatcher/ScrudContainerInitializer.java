@@ -14,26 +14,21 @@ import java.util.Set;
 public class ScrudContainerInitializer implements ServletContainerInitializer, ServletContextListener
 {
 
-    private Map<String,OperationExecutor> executorMap;
+
+    private ExecutorFactory executorFactory;
 
     @Override
     public void onStartup(Set<Class<?>> websocketResourceClasses, ServletContext servletContext) throws ServletException
     {
-        executorMap = createExecutorMap(websocketResourceClasses);
-        servletContext.addListener(this);
-    }
-
-    private Map<String, OperationExecutor> createExecutorMap(Set<Class<?>> websocketResourceClasses) throws ServletException
-    {
         try
         {
-            ExecutorFactory executorFactory = new ExecutorFactory(websocketResourceClasses);
-            return executorFactory.create();
+            executorFactory = new ExecutorFactory(websocketResourceClasses);
         }
         catch (IllegalAccessException | InstantiationException e)
         {
             throw new ServletException("Unable to start Scrud due to underlying exception", e);
         }
+        servletContext.addListener(this);
     }
 
     private void createEndpoint(ServletContext servletContext)
@@ -43,7 +38,7 @@ public class ScrudContainerInitializer implements ServletContainerInitializer, S
 
         try
         {
-            ServerEndpointConfig endpoint = ServerEndpointConfig.Builder.create(DispatchingEndpoint.class, "/websocket").configurator(new EndpointConfigurator(executorMap)).build();
+            ServerEndpointConfig endpoint = ServerEndpointConfig.Builder.create(DispatchingEndpoint.class, "/websocket").configurator(new EndpointConfigurator(executorFactory)).build();
             serverContainer.addEndpoint(endpoint);
         }
         catch (Exception e)
@@ -67,17 +62,17 @@ public class ScrudContainerInitializer implements ServletContainerInitializer, S
 
     public class EndpointConfigurator extends ServerEndpointConfig.Configurator {
 
-        private Map<String, OperationExecutor> operationExecutors;
 
-        public EndpointConfigurator(Map<String, OperationExecutor> operationExecutors) {
+        private ExecutorFactory executorFactory;
 
-            this.operationExecutors = operationExecutors;
+        public EndpointConfigurator(ExecutorFactory executorFactory)
+        {
+            this.executorFactory = executorFactory;
         }
 
-        public Map<String, OperationExecutor> getOperationExecutors() {
-
-            return operationExecutors;
+        public ExecutorFactory getExecutorFactory()
+        {
+            return executorFactory;
         }
-
     }
 }

@@ -1,25 +1,25 @@
 package com.appagility.j2ee.websocket.dispatcher.operation;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import com.appagility.j2ee.websocket.dispatcher.RepositoryFactory;
 import com.appagility.j2ee.websocket.dispatcher.ResourceConverter;
 import com.appagility.j2ee.websocket.dispatcher.WebSocketResource;
 import com.appagility.j2ee.websocket.dispatcher.operation.executors.CreationExecutor;
-import com.appagility.j2ee.websocket.dispatcher.operation.executors.OperationExecutor;
 import com.appagility.j2ee.websocket.dispatcher.operation.executors.SubscribeExecutor;
-import com.appagility.j2ee.websocket.dispatcher.operation.executors.UnsubscribeExecutor;
-import com.google.common.collect.Lists;
-
-import java.util.*;
 
 public class ExecutorFactory
 {
     private final ResourceConverter resourceConverter;
-    private final Map<String,RepositoryFactory<?>> nameToResourceFactory;
+    private CreationExecutor creationExecutor;
+    private SubscribeExecutor subscribeExecutor;
 
     public ExecutorFactory(Set<Class<?>> resourceClasses) throws IllegalAccessException, InstantiationException
     {
         Map<Class<?>, WebSocketResource> webSocketResourceMap = new HashMap<>();
-        nameToResourceFactory = new HashMap<>();
+        Map<String, RepositoryFactory<?>> nameToResourceFactory = new HashMap<>();
 
         for(Class<?> clazz: resourceClasses) {
 
@@ -29,33 +29,23 @@ public class ExecutorFactory
         }
 
         resourceConverter = new ResourceConverter(webSocketResourceMap);
+
+        creationExecutor = new CreationExecutor(nameToResourceFactory);
+        subscribeExecutor = new SubscribeExecutor(nameToResourceFactory);
     }
 
-    public Map<String, OperationExecutor> create() {
-
-        List<OperationExecutor> executors = Lists.newArrayList(creationExecutor(), subscribeExecutor(), unsubscribeExecutor());
-        Map<String, OperationExecutor> executorMap = new HashMap<>();
-
-        for(OperationExecutor operationExecutor : executors) {
-
-            executorMap.put(operationExecutor.getMessageType(), operationExecutor);
-        }
-
-        return executorMap;
+    public ResourceConverter resourceConverter()
+    {
+        return this.resourceConverter;
     }
 
-    private CreationExecutor creationExecutor() {
-
-        return new CreationExecutor(resourceConverter, nameToResourceFactory);
+    public CreationExecutor creationExecutor()
+    {
+        return creationExecutor;
     }
 
-    private SubscribeExecutor subscribeExecutor() {
-
-        return new SubscribeExecutor(resourceConverter, nameToResourceFactory);
-    }
-
-    private UnsubscribeExecutor unsubscribeExecutor() {
-
-        return new UnsubscribeExecutor();
+    public SubscribeExecutor subscribeExecutor()
+    {
+        return subscribeExecutor;
     }
 }

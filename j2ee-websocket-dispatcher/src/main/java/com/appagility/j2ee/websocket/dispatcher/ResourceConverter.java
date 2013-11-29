@@ -1,11 +1,13 @@
 package com.appagility.j2ee.websocket.dispatcher;
 
+import com.google.common.base.Function;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 
 public class ResourceConverter
 {
@@ -34,4 +36,13 @@ public class ResourceConverter
         Gson gson = new Gson();
         return gson.toJsonTree(resource).getAsJsonObject();
     }
+
+    public Function<Object, JsonObject> toJson = new Function<Object, JsonObject>() {
+
+        @Override
+        public JsonObject apply(Object resource)
+        {
+           return toJson(resource);
+        }
+    };
 }

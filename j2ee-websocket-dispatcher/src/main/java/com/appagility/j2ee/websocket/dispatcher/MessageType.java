@@ -1,5 +1,11 @@
 package com.appagility.j2ee.websocket.dispatcher;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.appagility.j2ee.websocket.dispatcher.messages.incoming.Create;
+import com.appagility.j2ee.websocket.dispatcher.messages.incoming.Subscribe;
+
 /**
  * Created with IntelliJ IDEA.
  * User: ricky
@@ -9,23 +15,47 @@ package com.appagility.j2ee.websocket.dispatcher;
  */
 public enum MessageType
 {
-    SUBSCRIBE("subscribe"),
+    SUBSCRIBE("subscribe", Subscribe.class),
 
-    SUBSCRIPTION_SUCCESS("subscription-success"),
+    SUBSCRIPTION_SUCCESS("subscription-success", null),
 
-    CREATED("created"),
+    CREATE("create", Create.class),
 
-    CREATE_SUCCESS("create-success");
+    CREATED("created", null),
+
+    CREATE_SUCCESS("create-success", null);
 
     private String messageType;
+    private Class<?> type;
 
-    private MessageType(String messageType)
+    private static Map<String, MessageType> keyToMessageType = new HashMap<>();
+
+    static
     {
-        this.messageType = messageType;
+        for(MessageType messageType : values())
+        {
+            keyToMessageType.put(messageType.key(), messageType);
+        }
     }
 
-    public String type()
+    public static MessageType forKey(String key)
+    {
+        return keyToMessageType.get(key);
+    }
+
+    private MessageType(String messageType, Class<?> type)
+    {
+        this.messageType = messageType;
+        this.type = type;
+    }
+
+    public String key()
     {
         return messageType;
+    }
+
+    public Class<?> type()
+    {
+        return type;
     }
 }

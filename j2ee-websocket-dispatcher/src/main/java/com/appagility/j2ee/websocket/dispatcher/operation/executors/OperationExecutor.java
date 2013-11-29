@@ -1,17 +1,15 @@
 package com.appagility.j2ee.websocket.dispatcher.operation.executors;
 
 import com.appagility.j2ee.websocket.dispatcher.ScrudEndpoint;
+import com.appagility.j2ee.websocket.dispatcher.messages.incoming.IncomingMessage;
 import com.google.gson.JsonObject;
 
 import javax.websocket.Session;
 import java.io.IOException;
 
-public abstract class OperationExecutor
+public abstract class OperationExecutor<MESSAGE_TYPE extends IncomingMessage>
 {
-
-    public abstract String getMessageType();
-
-    public abstract void execute(JsonObject jsonObject, ScrudEndpoint scrudEndpoint) throws IOException;
+    public abstract void execute(MESSAGE_TYPE message, ScrudEndpoint scrudEndpoint) throws IOException;
 
     public void handleSessionClose(Session session) {
 

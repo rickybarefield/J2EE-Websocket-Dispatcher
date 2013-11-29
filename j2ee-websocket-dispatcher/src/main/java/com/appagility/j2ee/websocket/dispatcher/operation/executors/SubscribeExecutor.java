@@ -1,41 +1,28 @@
 package com.appagility.j2ee.websocket.dispatcher.operation.executors;
 
-import com.appagility.j2ee.websocket.dispatcher.Keys;
-import com.appagility.j2ee.websocket.dispatcher.RepositoryFactory;
-import com.appagility.j2ee.websocket.dispatcher.ResourceConverter;
-import com.appagility.j2ee.websocket.dispatcher.ScrudEndpoint;
-import com.appagility.j2ee.websocket.dispatcher.subscription.SubscriptionAndCurrent;
-import com.google.gson.JsonObject;
 
-import javax.websocket.Session;
 import java.io.IOException;
 import java.util.Map;
 
-public class SubscribeExecutor extends OperationExecutor
+import com.appagility.j2ee.websocket.dispatcher.RepositoryFactory;
+import com.appagility.j2ee.websocket.dispatcher.ResourceConverter;
+import com.appagility.j2ee.websocket.dispatcher.ScrudEndpoint;
+import com.appagility.j2ee.websocket.dispatcher.messages.incoming.Subscribe;
+import com.appagility.j2ee.websocket.dispatcher.subscription.SubscriptionAndCurrent;
+
+public class SubscribeExecutor extends OperationExecutor<Subscribe>
 {
-    private ResourceConverter resourceConverter;
     private final Map<String, RepositoryFactory<?>> repositoryFactoryMap;
 
-    public SubscribeExecutor(ResourceConverter resourceConverter, Map<String, RepositoryFactory<?>> repositoryFactoryMap)
+    public SubscribeExecutor(Map<String, RepositoryFactory<?>> repositoryFactoryMap)
     {
-        this.resourceConverter = resourceConverter;
         this.repositoryFactoryMap = repositoryFactoryMap;
     }
 
     @Override
-    public String getMessageType()
+    public void execute(Subscribe message, ScrudEndpoint scrudEndpoint) throws IOException
     {
-        return Keys.SUBSCRIBE.value();
+        SubscriptionAndCurrent subscriptionAndCurrent = repositoryFactoryMap.get(message.getResourceType()).create().getAndSubscribe(message.getClientId());
+        scrudEndpoint.subscriptionSuccess(message.getClientId(), subscriptionAndCurrent.getCurrent());
     }
-
-    @Override
-    public void execute(JsonObject jsonObject, ScrudEndpoint scrudEndpoint) throws IOException
-    {
-        String clientId = jsonObject.get("clientId").getAsString();
-        String resourceName = jsonObject.get("type").getAsString();
-        SubscriptionAndCurrent subscriptionAndCurrent = repositoryFactoryMap.get(resourceName).create().getAndSubscribe(clientId);
-        scrudEndpoint.subscriptionSuccess(clientId, subscriptionAndCurrent.getCurrent());
-
-    }
-
 }

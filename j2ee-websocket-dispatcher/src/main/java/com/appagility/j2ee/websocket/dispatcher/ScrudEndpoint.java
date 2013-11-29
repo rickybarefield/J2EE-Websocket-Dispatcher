@@ -1,6 +1,8 @@
 package com.appagility.j2ee.websocket.dispatcher;
 
+import com.google.common.collect.Iterables;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import javax.websocket.RemoteEndpoint;
@@ -10,16 +12,18 @@ import java.util.Collection;
 public class ScrudEndpoint
 {
     RemoteEndpoint.Basic remoteEndpoint;
+    private ResourceConverter resourceConverter;
 
 
-    public ScrudEndpoint(RemoteEndpoint.Basic remoteEndpoint)
+    public ScrudEndpoint(RemoteEndpoint.Basic remoteEndpoint, ResourceConverter resourceConverter)
     {
         this.remoteEndpoint = remoteEndpoint;
+        this.resourceConverter = resourceConverter;
     }
 
     private void addMessageType(JsonObject json, MessageType messageType)
     {
-        json.addProperty("message-type", messageType.type());
+        json.addProperty("message-type", messageType.key());
     }
 
 
@@ -40,20 +44,27 @@ public class ScrudEndpoint
 
         JsonObject object = new JsonObject();
         addMessageType(object, messageType);
-        object.addProperty("client-id", clientId);
-        object.add("resource", itemJson);
+        object.addProperty(CommonProperties.CLIENT_ID.key(), clientId);
+        object.add(CommonProperties.RESOURCE.key(), itemJson);
 
         remoteEndpoint.sendText(object.toString());
     }
 
-    public void subscriptionSuccess(String clientSubscriptionId, Collection<Object> existingResources)
-    {
-        Gson gson = new Gson();
+    public void subscriptionSuccess(String clientSubscriptionId, Collection<Object> existingResources) throws IOException {
         JsonObject object = new JsonObject();
         addMessageType(object, MessageType.SUBSCRIPTION_SUCCESS);
-        object.addProperty("client-id", clientSubscriptionId);
-        //TODO You are here, need to create resources as array then call from SubscribeExecutor
-        //TODO SubscribeIT needs to work
+        object.addProperty(CommonProperties.CLIENT_ID.key(), clientSubscriptionId);
+
+        JsonArray resourcesJson = new JsonArray();
+        Iterable<JsonObject> jsonObjects = Iterables.transform(existingResources, resourceConverter.toJson);
+        for(JsonObject jsonObject : jsonObjects)
+        {
+            resourcesJson.add(jsonObject);
+        }
+
+        object.add("resources", resourcesJson);
+
+        remoteEndpoint.sendText(object.toString());
     }
 
 }

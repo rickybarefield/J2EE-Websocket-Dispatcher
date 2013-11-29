@@ -109,7 +109,7 @@ public class TestClientEndpoint extends Endpoint
         String clientId = createClientId();
         sendMessage("{message-type: 'subscribe', resource-type: 'Item', client-id: '" + clientId + "'}");
         String response = assertMessagesReceived("No response for subscribe").get(0);
-        Assert.assertTrue("Message was received for subscribe but was not a subscription-success, was instead " + response, response.contains("message-type: 'subscription-success'"));
+        Assert.assertTrue("Message was received for subscribe but was not a subscription-success, was instead " + response, response.contains("subscription-success"));
         return response;
     }
 
