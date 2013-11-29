@@ -48,7 +48,8 @@
                     <execution>
                         <phase>pre-integration-test</phase>
                         <goals>
-                            <goal>redeploy</goal>
+                            <goal>create-domain</goal>
+                            <goal>deploy</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -72,6 +73,7 @@
                     </components>
                     <user>admin</user>
                     <adminPassword>password</adminPassword>
+                    <debug>true</debug>
                 </configuration>
             </plugin>
         </plugins>
