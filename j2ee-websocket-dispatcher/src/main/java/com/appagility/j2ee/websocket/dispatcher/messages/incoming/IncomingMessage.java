@@ -2,7 +2,7 @@ package com.appagility.j2ee.websocket.dispatcher.messages.incoming;
 
 import java.io.IOException;
 
-import com.appagility.j2ee.websocket.dispatcher.Message;
+import com.appagility.j2ee.websocket.dispatcher.messages.Message;
 import com.appagility.j2ee.websocket.dispatcher.ScrudEndpoint;
 import com.appagility.j2ee.websocket.dispatcher.operation.ExecutorFactory;
 import com.google.gson.annotations.SerializedName;

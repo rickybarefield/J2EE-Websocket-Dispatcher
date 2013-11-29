@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 
 import com.appagility.j2ee.websocket.dispatcher.CommonProperties;
 import com.appagility.j2ee.websocket.dispatcher.ResourceConverter;
+import com.appagility.j2ee.websocket.dispatcher.messages.HasResource;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.GsonBuilder;

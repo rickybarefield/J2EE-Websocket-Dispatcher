@@ -1,5 +1,6 @@
 package com.appagility.j2ee.websocket.dispatcher.it.resources;
 
+import com.appagility.j2ee.websocket.dispatcher.Id;
 import com.appagility.j2ee.websocket.dispatcher.WebSocketResource;
 import com.appagility.j2ee.websocket.dispatcher.it.repositories.ItemRepositoryFactory;
 
@@ -9,6 +10,7 @@ public class Item
     private Long id;
     private String name;
 
+    @Id
     public Long getId()
     {
         return id;

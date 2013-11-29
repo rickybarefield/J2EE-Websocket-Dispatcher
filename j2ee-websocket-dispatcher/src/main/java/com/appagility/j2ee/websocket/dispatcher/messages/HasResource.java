@@ -1,4 +1,4 @@
-package com.appagility.j2ee.websocket.dispatcher.messages.incoming;
+package com.appagility.j2ee.websocket.dispatcher.messages;
 
 /**
  * @author rbarefield

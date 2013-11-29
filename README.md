@@ -57,7 +57,7 @@ A reply will be sent for a successful subscription with the following properties
   </tr>
   <tr>
     <td>resources</td>
-    <td>Array of Objects containing resource-id and resource</td>
+    <td>Array of Objects containing resource-id, resource and resource-type</td>
     <td>The current resources matching this subscription</td>
   </tr>
   <tr>
