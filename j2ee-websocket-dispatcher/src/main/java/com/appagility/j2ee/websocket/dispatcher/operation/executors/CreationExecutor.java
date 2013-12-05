@@ -24,7 +24,7 @@ public class CreationExecutor extends OperationExecutor<Create>
     {
         SubscribingRepository subscribingRepository = nameToRepositoryFactory.get(message.getResourceType()).create();
 
-        Object createdResource = subscribingRepository.create(message.getResource());
+        Object createdResource = subscribingRepository.doCreate(message.getResource());
 
         scrudEndpoint.createSuccess(message.getClientId(), createdResource);
     }

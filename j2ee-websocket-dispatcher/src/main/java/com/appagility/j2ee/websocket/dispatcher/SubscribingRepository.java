@@ -34,7 +34,7 @@ public abstract class SubscribingRepository<ID, ITEM>
         }
     }
 
-    ITEM doCreate(ITEM item)
+    public ITEM doCreate(ITEM item)
     {
         try
         {
@@ -50,7 +50,7 @@ public abstract class SubscribingRepository<ID, ITEM>
                 {
                     subscription.created(item);
                 }
-                catch (IOException e)
+                catch (Exception e)
                 {
                     //TODO Think
                 }
@@ -65,7 +65,7 @@ public abstract class SubscribingRepository<ID, ITEM>
 
     }
 
-    public abstract ITEM create(ITEM item);
+    protected abstract ITEM create(ITEM item);
     protected abstract Collection<ITEM> readAll();
     //TODO read / update / delete
 }

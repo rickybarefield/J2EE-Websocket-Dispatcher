@@ -47,12 +47,13 @@ public class SubscribeIT extends SubscribeUnsubscribeBase
         Assert.assertEquals(idOfCreatedResource, itemReceivedBySubscriber.get("resource-id").getAsString());
 
         JsonObject resourceReceivedBySubscriber = itemReceivedBySubscriber.getAsJsonObject("resource");
-        Assert.assertEquals(idOfCreatedResource, resourceReceivedBySubscriber.get("id").getAsString(), 0);
+        Assert.assertEquals(idOfCreatedResource, resourceReceivedBySubscriber.get("id").getAsString());
         Assert.assertEquals("NewResource", resourceReceivedBySubscriber.get("name").getAsString());
     }
 
     @Test
     public void notificationOfDeleteSentThrough() throws Exception {
 
+        //TODO
     }
 }

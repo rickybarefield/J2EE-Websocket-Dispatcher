@@ -24,5 +24,6 @@ public class SubscribeExecutor extends OperationExecutor<Subscribe>
     {
         SubscriptionAndCurrent subscriptionAndCurrent = repositoryFactoryMap.get(message.getResourceType()).create().getAndSubscribe(message.getClientId());
         scrudEndpoint.subscriptionSuccess(message.getClientId(), subscriptionAndCurrent.getCurrent());
+        subscriptionAndCurrent.getSubscription().connect(scrudEndpoint);
     }
 }
