@@ -35,7 +35,14 @@ Subscriptions are initiated by the client with a subscribe with the following pr
     <td>String</td>
     <td>The type of resource for the subscription</td>
   </tr>
+  <tr>
+    <td>filter</td>
+    <td>unknown</td>
+    <td>The filter which will be evaluated to determine if resources match the subscription</td>
+  </tr>
 </table>
+
+Note that filters are not currently supported.
 
 A reply will be sent for a successful subscription with the following properties:
 
@@ -60,14 +67,8 @@ A reply will be sent for a successful subscription with the following properties
     <td>Array of Objects containing resource-id, resource and resource-type</td>
     <td>The current resources matching this subscription</td>
   </tr>
-  <tr>
-    <td>filter</td>
-    <td>unknown</td>
-    <td>The filter which will be evaluated to determine if resources match the subscription</td>
-  </tr>
 </table>
 
-Note that filters are not currently supported.
 
 An unsuccessful subscription will result in a message with the following properties:
 

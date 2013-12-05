@@ -34,22 +34,22 @@ public final class JsonHelpers
         };
     }
 
-    public static Function<String, Long> ID_OF_RESOURCE =
-    new Function<String, Long>()
+    public static Function<String, String> ID_OF_RESOURCE =
+    new Function<String, String>()
     {
         @Override
-        public Long apply(String json)
+        public String apply(String json)
         {
-            return  new JsonParser().parse(json).getAsJsonObject().get("resource-id").getAsLong();
+            return  new JsonParser().parse(json).getAsJsonObject().get("resource-id").getAsString();
         }
     };
 
-    public static Function<JsonElement, Long> ID_OF = new Function<JsonElement, Long>()
+    public static Function<JsonElement, String> ID_OF = new Function<JsonElement, String>()
     {
         @Override
-        public Long apply(JsonElement jsonElement)
+        public String apply(JsonElement jsonElement)
         {
-            return jsonElement.getAsJsonObject().get("resource-id").getAsLong();
+            return jsonElement.getAsJsonObject().get("resource-id").getAsString();
         }
     };
 }

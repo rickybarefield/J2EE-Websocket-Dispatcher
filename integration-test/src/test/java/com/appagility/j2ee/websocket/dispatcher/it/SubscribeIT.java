@@ -19,13 +19,13 @@ public class SubscribeIT extends SubscribeUnsubscribeBase
         String resource1Response = manipulatingClient.createExpectingSuccess("ExistingResource1");
         String resource2Response = manipulatingClient.createExpectingSuccess("ExistingResource2");
 
-        List<Long> createdIds = Lists.transform(Lists.newArrayList(resource1Response, resource2Response), JsonHelpers.ID_OF_RESOURCE);
+        List<String> createdIds = Lists.transform(Lists.newArrayList(resource1Response, resource2Response), JsonHelpers.ID_OF_RESOURCE);
 
         String subscribeResponse = subscribingClient.subscribeExpectingSuccess();
 
         JsonArray resources = new JsonParser().parse(subscribeResponse).getAsJsonObject().getAsJsonArray("resources");
 
-        List<Long> idsFromResources = Lists.newArrayList(Iterables.transform(resources, JsonHelpers.ID_OF));
+        List<String> idsFromResources = Lists.newArrayList(Iterables.transform(resources, JsonHelpers.ID_OF));
 
         Assert.assertTrue(idsFromResources.containsAll(createdIds));
     }
@@ -33,20 +33,22 @@ public class SubscribeIT extends SubscribeUnsubscribeBase
     @Test
     public void newResourcesSentThrough() throws Exception {
 
-//        String subscribeResponse = subscribe();
-//        JsonHelpers.assertSuccess(subscribeResponse);
-//
-//        subscribingClient.expectMessages(1);
-//
-//        Long idFromCreateResponse = createWithManipulator("ManipulatorCreated1");
-//
-//        JsonObject itemReceivedBySubscriber = new JsonParser().parse(subscribingClient.assertMessagesReceived("Subscribing client did not receive the new Item").get(0)).getAsJsonObject();
-//
-//        Assert.assertEquals("create", itemReceivedBySubscriber.get("operation").getAsString());
-//
-//        JsonObject resourceReceivedBySubscriber = itemReceivedBySubscriber.getAsJsonObject("resource");
-//        Assert.assertEquals(idFromCreateResponse, resourceReceivedBySubscriber.get("id").getAsLong(), 0);
-//        Assert.assertEquals("ManipulatorCreated1", resourceReceivedBySubscriber.get("name").getAsString());
+        subscribingClient.subscribeExpectingSuccess();
+        subscribingClient.expectMessages(1);
+
+        String createdResponse = manipulatingClient.createExpectingSuccess("NewResource");
+
+        String idOfCreatedResource = JsonHelpers.ID_OF_RESOURCE.apply(createdResponse);
+
+        JsonObject itemReceivedBySubscriber = new JsonParser().parse(subscribingClient.assertMessagesReceived("Subscribing client did not receive the new Item").get(0)).getAsJsonObject();
+
+        Assert.assertEquals("created", itemReceivedBySubscriber.get("message-type").getAsString());
+
+        Assert.assertEquals(idOfCreatedResource, itemReceivedBySubscriber.get("resource-id").getAsString());
+
+        JsonObject resourceReceivedBySubscriber = itemReceivedBySubscriber.getAsJsonObject("resource");
+        Assert.assertEquals(idOfCreatedResource, resourceReceivedBySubscriber.get("id").getAsString(), 0);
+        Assert.assertEquals("NewResource", resourceReceivedBySubscriber.get("name").getAsString());
     }
 
     @Test
