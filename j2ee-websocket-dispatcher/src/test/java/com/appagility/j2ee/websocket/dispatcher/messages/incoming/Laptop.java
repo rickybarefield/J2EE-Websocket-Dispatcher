@@ -1,5 +1,6 @@
 package com.appagility.j2ee.websocket.dispatcher.messages.incoming;
 
+import com.appagility.j2ee.websocket.dispatcher.Id;
 import com.appagility.j2ee.websocket.dispatcher.RepositoryFactory;
 import com.appagility.j2ee.websocket.dispatcher.SubscribingRepository;
 import com.appagility.j2ee.websocket.dispatcher.WebSocketResource;
@@ -11,6 +12,7 @@ import com.appagility.j2ee.websocket.dispatcher.WebSocketResource;
 public class Laptop
 {
     private String name;
+    private String id;
 
     public String getName()
     {
@@ -20,6 +22,17 @@ public class Laptop
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    @Id
+    public String getId()
+    {
+        return id;
+    }
+
+    public void setId(String id)
+    {
+        this.id = id;
     }
 }
 

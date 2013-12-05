@@ -5,15 +5,12 @@ import com.google.common.collect.Iterables;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.reflections.ReflectionUtils;
-import org.reflections.Reflections;
-import org.reflections.scanners.Scanner;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.annotation.Nullable;
 
 public class ResourceConverter
 {
@@ -52,12 +49,17 @@ public class ResourceConverter
 
     public <RESOURCE_TYPE> JsonObject toJson(RESOURCE_TYPE resource) {
 
-        Gson gson = new Gson();
-        JsonObject wrapper = new JsonObject();
-        wrapper.add(CommonProperties.RESOURCE.key(), gson.toJsonTree(resource).getAsJsonObject());
-        wrapper.add(CommonProperties.RESOURCE_ID.key(), )
+        JsonObject object = new JsonObject();
+        addToJson(object, resource);
+        return object;
+    }
 
-        return wrapper;
+
+    public <RESOURCE_TYPE> void addToJson(JsonObject baseJson, RESOURCE_TYPE resource) {
+
+        Gson gson = new Gson();
+        baseJson.add(CommonProperties.RESOURCE.key(), gson.toJsonTree(resource).getAsJsonObject());
+        baseJson.addProperty(CommonProperties.RESOURCE_ID.key(), getId(resource));
     }
 
     public Function<Object, JsonObject> toJson = new Function<Object, JsonObject>() {
@@ -68,4 +70,16 @@ public class ResourceConverter
            return toJson(resource);
         }
     };
+
+    private String getId(Object resource)
+    {
+        try
+        {
+            return classToIdMethod.get(resource.getClass()).invoke(resource).toString();
+        }
+        catch (IllegalAccessException | InvocationTargetException  e)
+        {
+            throw new RuntimeException("Unable to get id of resource", e);
+        }
+    }
 }

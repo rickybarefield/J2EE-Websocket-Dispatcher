@@ -1,7 +1,6 @@
 package com.appagility.j2ee.websocket.dispatcher;
 
 import com.google.common.collect.Iterables;
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -39,13 +38,10 @@ public class ScrudEndpoint
 
     private void clientIdAndResource(MessageType messageType, String clientId, Object resource) throws IOException
     {
-        Gson gson = new Gson();
-        JsonObject itemJson = gson.toJsonTree(resource).getAsJsonObject();
-
         JsonObject object = new JsonObject();
         addMessageType(object, messageType);
         object.addProperty(CommonProperties.CLIENT_ID.key(), clientId);
-        object.add(CommonProperties.RESOURCE.key(), itemJson);
+        resourceConverter.addToJson(object, resource);
 
         remoteEndpoint.sendText(object.toString());
     }
