@@ -29,12 +29,13 @@ public class TestClientEndpoint extends Endpoint
     private static final long NEGATIVE_ASSERTION_TIMEOUT = 1000;
 
     private Session session;
+    private String lastClientId;
 
     @Before
     public void connect() throws InterruptedException, URISyntaxException, DeploymentException
     {
         ClientManager client = ClientManager.createClient();
-        session = client.connectToServer(this, new URI("ws://localhost:8080/j2ee-dispatcher-integration-test-0.0.1-SNAPSHOT/websocket"));
+        session = client.connectToServer(this, new URI("ws://localhost:8080/scrud-java-server-integration-test-0.0.1-SNAPSHOT/websocket"));
         boolean started = openLatch.await(TIMEOUT, TimeUnit.MILLISECONDS);
 
         if(!started) {
@@ -113,9 +114,22 @@ public class TestClientEndpoint extends Endpoint
         return response;
     }
 
+    public void unsubscribe(String clientId) throws IOException, InterruptedException
+    {
+        expectMessages(0);
+        sendMessage("{message-type: 'unsubscribe', client-id: '" + clientId + "'}");
+        assertNoMessagesReceived("No message should be receieved when unsubscribing");
+    }
+
     private String createClientId()
     {
-        return "myId-" + idBase.incrementAndGet();
+        lastClientId = "myId-" + idBase.incrementAndGet();
+        return lastClientId;
+    }
+
+    protected String getLastClientId()
+    {
+        return lastClientId;
     }
 
     public String createExpectingSuccess(String itemName) throws IOException, InterruptedException

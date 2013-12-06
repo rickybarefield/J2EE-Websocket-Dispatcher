@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public abstract class SubscribingRepository<ID, ITEM>
+public abstract class SubscribingRepository<ID, ITEM> implements Unsubscribable
 {
     private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
@@ -23,7 +23,7 @@ public abstract class SubscribingRepository<ID, ITEM>
         {
             readWriteLock.readLock().lock();
             Collection<ITEM> current = readAll();
-            Subscription<ITEM> subscription = new Subscription<>(clientId);
+            Subscription<ITEM> subscription = new Subscription<>(clientId, this);
             subscriptions.put(subscription.getServerId(), subscription);
 
             return new SubscriptionAndCurrent(subscription, current);
@@ -32,6 +32,20 @@ public abstract class SubscribingRepository<ID, ITEM>
         {
             readWriteLock.readLock().unlock();
         }
+    }
+
+    public void unsubscribe(String serverId)
+    {
+        try
+        {
+            readWriteLock.writeLock().lock();
+            subscriptions.remove(serverId);
+        }
+        finally
+        {
+            readWriteLock.writeLock().unlock();
+        }
+
     }
 
     public ITEM doCreate(ITEM item)

@@ -1,15 +1,17 @@
 package com.appagility.j2ee.websocket.dispatcher;
 
+import java.io.IOException;
+import javax.websocket.CloseReason;
+import javax.websocket.Endpoint;
+import javax.websocket.EndpointConfig;
+import javax.websocket.MessageHandler;
+import javax.websocket.Session;
+import javax.websocket.server.ServerEndpointConfig;
+
 import com.appagility.j2ee.websocket.dispatcher.messages.incoming.IncomingMessageFactory;
 import com.appagility.j2ee.websocket.dispatcher.operation.ExecutorFactory;
-import com.appagility.j2ee.websocket.dispatcher.operation.executors.OperationExecutor;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
-import javax.websocket.*;
-import javax.websocket.server.ServerEndpointConfig;
-import java.io.IOException;
-import java.util.Map;
 
 public class DispatchingEndpoint extends Endpoint
 {
@@ -29,7 +31,10 @@ public class DispatchingEndpoint extends Endpoint
             endpointConfigurator = ((ScrudContainerInitializer.EndpointConfigurator) ((ServerEndpointConfig) config).getConfigurator());
         }
 
-        session.addMessageHandler(new Handler(session, endpointConfigurator.getExecutorFactory()));
+
+        ScrudEndpoint scrudEndpoint = new ScrudEndpoint(session.getBasicRemote(), endpointConfigurator.getExecutorFactory().resourceConverter());
+        IncomingMessageFactory incomingMessageFactory = new IncomingMessageFactory(endpointConfigurator.getExecutorFactory().resourceConverter());
+        session.addMessageHandler(new Handler(endpointConfigurator.getExecutorFactory(), scrudEndpoint, incomingMessageFactory));
 
         System.out.println("Added handler");
     }
@@ -43,15 +48,15 @@ public class DispatchingEndpoint extends Endpoint
 
     private class Handler implements MessageHandler.Whole<String> {
 
-        private Session session;
-        private ExecutorFactory executorFactory;
         private IncomingMessageFactory incomingMessageFactory;
+        private ExecutorFactory executorFactory;
+        private ScrudEndpoint scrudEndpoint;
 
-        private Handler(Session session, ExecutorFactory executorFactory) {
-
-            this.session = session;
+        private Handler(ExecutorFactory executorFactory, ScrudEndpoint scrudEndpoint, IncomingMessageFactory incomingMessageFactory) {
             this.executorFactory = executorFactory;
-            this.incomingMessageFactory = new IncomingMessageFactory(executorFactory.resourceConverter());
+
+            this.scrudEndpoint = scrudEndpoint;
+            this.incomingMessageFactory = incomingMessageFactory;
         }
 
         @Override
@@ -67,7 +72,7 @@ public class DispatchingEndpoint extends Endpoint
 
             try
             {
-                incomingMessageFactory.createFromJson(message).execute(executorFactory, new ScrudEndpoint(session.getBasicRemote(), executorFactory.resourceConverter()));
+                incomingMessageFactory.createFromJson(message).execute(executorFactory, scrudEndpoint);
 
             }
             catch (IOException e)

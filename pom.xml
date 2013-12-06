@@ -2,15 +2,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.appagility.j2ee-websocket-dispatcher</groupId>
-    <artifactId>j2ee-websocket-dispatcher-parent</artifactId>
+    <groupId>com.appagility.scrud-java-server</groupId>
+    <artifactId>scrud-java-server-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <packaging>pom</packaging>
-    <name>J2EE Websocket Dispatcher Parent</name>
+    <name>Scrud Java Server Parent</name>
 
     <modules>
-      <module>j2ee-websocket-dispatcher</module>
+      <module>scrud-java-server</module>
       <module>integration-test</module>
     </modules>
 
@@ -44,7 +44,7 @@
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>j2ee-websocket-dispatcher</artifactId>
+                <artifactId>scrud-java-server</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

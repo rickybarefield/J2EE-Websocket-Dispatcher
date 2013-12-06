@@ -2,12 +2,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>j2ee-dispatcher-integration-test</artifactId>
+    <artifactId>scrud-java-server-integration-test</artifactId>
 
     <parent>
-        <groupId>com.appagility.j2ee-websocket-dispatcher</groupId>
+        <groupId>com.appagility.scrud-java-server</groupId>
         <version>0.0.1-SNAPSHOT</version>
-        <artifactId>j2ee-websocket-dispatcher-parent</artifactId>
+        <artifactId>scrud-java-server-parent</artifactId>
     </parent>
 
     <properties>
@@ -15,7 +15,7 @@
     </properties>
 
     <packaging>war</packaging>
-    <name>J2EE Dispatcher Integration Test</name>
+    <name>Scrud Java Server Integration Tests</name>
 
 
     <build>
@@ -82,7 +82,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>j2ee-websocket-dispatcher</artifactId>
+            <artifactId>scrud-java-server</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.tyrus</groupId>

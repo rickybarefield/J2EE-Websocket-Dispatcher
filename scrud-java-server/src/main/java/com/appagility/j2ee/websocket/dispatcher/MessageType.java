@@ -5,24 +5,15 @@ import java.util.Map;
 
 import com.appagility.j2ee.websocket.dispatcher.messages.incoming.Create;
 import com.appagility.j2ee.websocket.dispatcher.messages.incoming.Subscribe;
+import com.appagility.j2ee.websocket.dispatcher.messages.incoming.Unsubscribe;
 
-/**
- * Created with IntelliJ IDEA.
- * User: ricky
- * Date: 26/11/13
- * Time: 18:43
- * To change this template use File | Settings | File Templates.
- */
 public enum MessageType
 {
     SUBSCRIBE("subscribe", Subscribe.class),
-
+    UNSUBSCRIBE("unsubscribe", Unsubscribe.class),
     SUBSCRIPTION_SUCCESS("subscription-success", null),
-
     CREATE("create", Create.class),
-
     CREATED("created", null),
-
     CREATE_SUCCESS("create-success", null);
 
     private String messageType;

@@ -11,7 +11,7 @@ public abstract class OperationExecutor<MESSAGE_TYPE extends IncomingMessage>
 {
     public abstract void execute(MESSAGE_TYPE message, ScrudEndpoint scrudEndpoint) throws IOException;
 
-    public void handleSessionClose(Session session) {
+    public void handleSessionClose(ScrudEndpoint scrudEndpoint) {
 
         //nop
     }

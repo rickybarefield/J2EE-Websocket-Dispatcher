@@ -8,23 +8,24 @@ public class UnsubscribeIT extends SubscribeUnsubscribeBase
     @Test
     public void testUnsubscribe() throws Exception {
 
-        subscribingClient.subscribeExpectingSuccess();
+        String subscribeResponse = subscribingClient.subscribeExpectingSuccess();
+
+        String clientId = JsonHelpers.stringPropertyOf(subscribeResponse, "client-id");
 
         subscribingClient.expectMessages(1);
 
-//        createWithManipulator("testUnsubscribe");
+        manipulatingClient.createExpectingSuccess("UnsubscribeCreate1");
 
         subscribingClient.assertMessagesReceived("No message received when subscribed");
 
-        //TODO
-//        String unsubscribeResponse = subscribingClient.unsubscribe();
-//        JsonHelpers.assertSuccess(unsubscribeResponse);
-//
-//        subscribingClient.expectMessages(0);
-//
-//        createWithManipulator("CreatedWhenUnsubscribed");
-//
-//        subscribingClient.assertNoMessagesReceived("Received a message when unsubscribed");
+        subscribingClient.unsubscribe(clientId);
+
+        subscribingClient.expectMessages(0);
+
+        manipulatingClient.createExpectingSuccess("UnsubscribeCreate2");
+
+        subscribingClient.assertNoMessagesReceived("Message received when unsubscribed");
+
     }
 
 }

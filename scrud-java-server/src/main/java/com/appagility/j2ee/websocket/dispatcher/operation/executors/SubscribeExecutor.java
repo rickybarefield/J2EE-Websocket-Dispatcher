@@ -4,6 +4,8 @@ package com.appagility.j2ee.websocket.dispatcher.operation.executors;
 import java.io.IOException;
 import java.util.Map;
 
+import javax.websocket.Session;
+
 import com.appagility.j2ee.websocket.dispatcher.RepositoryFactory;
 import com.appagility.j2ee.websocket.dispatcher.ResourceConverter;
 import com.appagility.j2ee.websocket.dispatcher.ScrudEndpoint;
@@ -24,6 +26,11 @@ public class SubscribeExecutor extends OperationExecutor<Subscribe>
     {
         SubscriptionAndCurrent subscriptionAndCurrent = repositoryFactoryMap.get(message.getResourceType()).create().getAndSubscribe(message.getClientId());
         scrudEndpoint.subscriptionSuccess(message.getClientId(), subscriptionAndCurrent.getCurrent());
-        subscriptionAndCurrent.getSubscription().connect(scrudEndpoint);
+        scrudEndpoint.connectToSubscription(subscriptionAndCurrent.getSubscription());
+    }
+
+    public void handleSessionClose(ScrudEndpoint scrudEndpoint)
+    {
+        scrudEndpoint.unsubscribeFromAll();
     }
 }

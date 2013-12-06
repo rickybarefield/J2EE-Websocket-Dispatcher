@@ -22,6 +22,11 @@ public final class JsonHelpers
         Assert.assertEquals("success", status);
     }
 
+    public static String stringPropertyOf(String jsonObject, String propertyName)
+    {
+        return new JsonParser().parse(jsonObject).getAsJsonObject().get(propertyName).getAsString();
+    }
+
     public static Predicate<JsonElement> hasIdOf(final Long id) {
 
         return new Predicate<JsonElement>()
