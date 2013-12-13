@@ -64,13 +64,15 @@ A reply will be sent for a successful subscription with the following properties
   </tr>
   <tr>
     <td>resources</td>
-    <td>Array of Objects containing resource-id, resource and resource-type</td>
+    <td>JSON object containing resources mapped by their id</td>
     <td>The current resources matching this subscription</td>
   </tr>
 </table>
 
 
 An unsuccessful subscription will result in a message with the following properties:
+
+TODO
 
 #### Messages from the server relating to a subscription ####
 

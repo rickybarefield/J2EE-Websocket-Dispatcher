@@ -17,7 +17,7 @@ public class CreateIT extends TestClientEndpoint
         String subscriptionResponse = subscribeExpectingSuccess();
         unsubscribe(JsonHelpers.stringPropertyOf(subscriptionResponse, "client-id"));
 
-        expectedId = Integer.valueOf(new JsonParser().parse(subscriptionResponse).getAsJsonObject().getAsJsonArray("resources").size()).longValue();
+        expectedId = Integer.valueOf(new JsonParser().parse(subscriptionResponse).getAsJsonObject().getAsJsonObject("resources").entrySet().size()).longValue();
     }
 
     @Test

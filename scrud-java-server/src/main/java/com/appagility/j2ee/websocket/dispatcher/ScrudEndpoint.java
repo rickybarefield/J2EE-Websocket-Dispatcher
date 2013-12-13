@@ -1,15 +1,13 @@
 package com.appagility.j2ee.websocket.dispatcher;
 
-import com.appagility.j2ee.websocket.dispatcher.subscription.Subscription;
-import com.google.common.collect.Iterables;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-
-import javax.websocket.RemoteEndpoint;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import javax.websocket.RemoteEndpoint;
+
+import com.appagility.j2ee.websocket.dispatcher.subscription.Subscription;
+import com.google.gson.JsonObject;
 
 public class ScrudEndpoint
 {
@@ -45,6 +43,8 @@ public class ScrudEndpoint
         JsonObject object = new JsonObject();
         addMessageType(object, messageType);
         object.addProperty(CommonProperties.CLIENT_ID.key(), clientId);
+        object.add(CommonProperties.RESOURCE.key(), resourceConverter.toJson(resource));
+        object.addProperty(CommonProperties.RESOURCE_ID.key(), resourceConverter.getId(resource));
         resourceConverter.addToJson(object, resource);
 
         remoteEndpoint.sendText(object.toString());
@@ -56,11 +56,10 @@ public class ScrudEndpoint
         addMessageType(object, MessageType.SUBSCRIPTION_SUCCESS);
         object.addProperty(CommonProperties.CLIENT_ID.key(), clientSubscriptionId);
 
-        JsonArray resourcesJson = new JsonArray();
-        Iterable<JsonObject> jsonObjects = Iterables.transform(existingResources, resourceConverter.toJson);
-        for(JsonObject jsonObject : jsonObjects)
+        JsonObject resourcesJson = new JsonObject();
+        for(Object resource : existingResources)
         {
-            resourcesJson.add(jsonObject);
+            resourceConverter.addToJson(resourcesJson, resource);
         }
 
         object.add("resources", resourcesJson);

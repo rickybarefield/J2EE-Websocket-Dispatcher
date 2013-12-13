@@ -2,7 +2,9 @@ package com.appagility.j2ee.websocket.dispatcher.it;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.junit.Assert;
@@ -10,6 +12,8 @@ import org.junit.Test;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class SubscribeIT extends SubscribeUnsubscribeBase
 {
@@ -23,9 +27,13 @@ public class SubscribeIT extends SubscribeUnsubscribeBase
 
         String subscribeResponse = subscribingClient.subscribeExpectingSuccess();
 
-        JsonArray resources = new JsonParser().parse(subscribeResponse).getAsJsonObject().getAsJsonArray("resources");
+        JsonObject resources = new JsonParser().parse(subscribeResponse).getAsJsonObject().getAsJsonObject("resources");
 
-        List<String> idsFromResources = Lists.newArrayList(Iterables.transform(resources, JsonHelpers.ID_OF));
+        Set<String> idsFromResources = Sets.newHashSet();
+        for(Map.Entry<String, JsonElement> entry : resources.entrySet())
+        {
+            idsFromResources.add(entry.getKey());
+        }
 
         Assert.assertTrue(idsFromResources.containsAll(createdIds));
     }

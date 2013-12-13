@@ -47,31 +47,18 @@ public class ResourceConverter
         return (RESOURCE_TYPE) gson.fromJson(json, nameToResourceClass.get(resourceName));
     }
 
-    public <RESOURCE_TYPE> JsonObject toJson(RESOURCE_TYPE resource) {
+    public <RESOURCE_TYPE> void addToJson(JsonObject wrappingJson, RESOURCE_TYPE resource) {
 
-        JsonObject object = new JsonObject();
-        addToJson(object, resource);
-        return object;
+        wrappingJson.add(getId(resource), toJson(resource));
     }
 
-
-    public <RESOURCE_TYPE> void addToJson(JsonObject baseJson, RESOURCE_TYPE resource) {
-
+    public JsonObject toJson(Object resource)
+    {
         Gson gson = new Gson();
-        baseJson.add(CommonProperties.RESOURCE.key(), gson.toJsonTree(resource).getAsJsonObject());
-        baseJson.addProperty(CommonProperties.RESOURCE_ID.key(), getId(resource));
+        return gson.toJsonTree(resource).getAsJsonObject();
     }
 
-    public Function<Object, JsonObject> toJson = new Function<Object, JsonObject>() {
-
-        @Override
-        public JsonObject apply(Object resource)
-        {
-           return toJson(resource);
-        }
-    };
-
-    private String getId(Object resource)
+    public String getId(Object resource)
     {
         try
         {
