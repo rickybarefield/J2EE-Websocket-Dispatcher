@@ -66,7 +66,8 @@ public abstract class SubscribingRepository<ID, ITEM> implements Unsubscribable
                 }
                 catch (Exception e)
                 {
-                    //TODO Think
+                    //TODO
+                    e.printStackTrace();
                 }
             }
 
