@@ -7,6 +7,7 @@ import com.appagility.j2ee.websocket.dispatcher.ResourceConverter;
 import com.appagility.j2ee.websocket.dispatcher.messages.HasResource;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -28,7 +29,8 @@ public class MessageWithResourceDeserializer implements JsonDeserializer<HasReso
     @Override
     public HasResource deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
 
-        HasResource deserialization = new GsonBuilder().addDeserializationExclusionStrategy(new ResourceExclusionStrategy()).create().fromJson(jsonElement, type);
+        Gson gson = new GsonBuilder().addDeserializationExclusionStrategy(new ResourceExclusionStrategy()).create();
+        HasResource deserialization = gson.fromJson(jsonElement, type);
 
         String resourceType = deserialization.getResourceType();
         deserialization.setResource(resourceConverter.fromJson(resourceType, jsonElement.getAsJsonObject().get(CommonProperties.RESOURCE.key()).getAsJsonObject()));

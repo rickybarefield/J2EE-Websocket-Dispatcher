@@ -3,6 +3,7 @@ package com.appagility.j2ee.websocket.dispatcher;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import org.reflections.ReflectionUtils;
 
@@ -14,6 +15,8 @@ import java.util.Set;
 
 public class ResourceConverter
 {
+    public static final String ECMA_COMPATIBLE_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+
     private Map<String, Class<?>> nameToResourceClass = new HashMap<>();
 
     private Map<Class<?>, Method> classToIdMethod = new HashMap<>();
@@ -43,7 +46,7 @@ public class ResourceConverter
 
     public <RESOURCE_TYPE> RESOURCE_TYPE fromJson(String resourceName, JsonObject json) {
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setDateFormat(ECMA_COMPATIBLE_DATETIME_FORMAT).create();
         return (RESOURCE_TYPE) gson.fromJson(json, nameToResourceClass.get(resourceName));
     }
 
@@ -54,7 +57,7 @@ public class ResourceConverter
 
     public JsonObject toJson(Object resource)
     {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setDateFormat(ECMA_COMPATIBLE_DATETIME_FORMAT).create();
         return gson.toJsonTree(resource).getAsJsonObject();
     }
 

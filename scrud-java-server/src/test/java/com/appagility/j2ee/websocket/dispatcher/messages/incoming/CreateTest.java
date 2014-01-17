@@ -11,7 +11,7 @@ import org.junit.Test;
  */
 public class CreateTest
 {
-    private static String createMessage = "{message-type: 'create', resource-type: 'laptop', client-id: 'mySubscription1', resource: {name: 'lenovo'}}";
+    private static String createMessage = "{message-type: 'create', resource-type: 'laptop', client-id: 'mySubscription1', resource: {name: 'lenovo', manufactureDateTime: '2013-04-03T23:00:00.000Z'}}";
 
     @Test
     public void createFromJson()
