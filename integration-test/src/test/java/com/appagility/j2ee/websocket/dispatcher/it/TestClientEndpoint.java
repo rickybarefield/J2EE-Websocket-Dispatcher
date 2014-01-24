@@ -106,9 +106,19 @@ public class TestClientEndpoint extends Endpoint
 
     public String subscribeExpectingSuccess() throws IOException, InterruptedException
     {
+        return sendMessageReplacingClientIdAndExpectSubscriptionSuccess("{message-type: 'subscribe', resource-type: 'Item', client-id: 'CLIENT_ID'}");
+    }
+
+    public String subscribeExpectingSuccess(String resourceId) throws IOException, InterruptedException
+    {
+        return sendMessageReplacingClientIdAndExpectSubscriptionSuccess("{message-type: 'subscribe', resource-type: 'Item', client-id: 'CLIENT_ID', resource-id: '" + resourceId + "'}");
+    }
+
+    private String sendMessageReplacingClientIdAndExpectSubscriptionSuccess(String message) throws InterruptedException, IOException
+    {
         expectMessages(1);
         String clientId = createClientId();
-        sendMessage("{message-type: 'subscribe', resource-type: 'Item', client-id: '" + clientId + "'}");
+        sendMessage(message.replace("CLIENT_ID", clientId));
         String response = assertMessagesReceived("No response for subscribe").get(0);
         Assert.assertTrue("Message was received for subscribe but was not a subscription-success, was instead " + response, response.contains("subscription-success"));
         return response;
@@ -139,6 +149,16 @@ public class TestClientEndpoint extends Endpoint
         sendMessage("{message-type: 'create', client-id: '" + clientId + "', resource-type: 'Item', resource: {name: '" + itemName  + "'}}");
         String response = assertMessagesReceived("No response for create").get(0);
         Assert.assertTrue("Message was received for creation but was not a create-success, was instead " + response, response.contains("create-success"));
+        return response;
+    }
+
+    public String updateExpectingSuccess(String resourceId, String newItemName) throws IOException, InterruptedException
+    {
+        expectMessages(1);
+        String clientId = createClientId();
+        sendMessage("{message-type: 'update', resource-id: '"+ resourceId + "', client-id: '" + clientId + "', resource-type: 'Item', resource: {name: '" + newItemName + "'}}");
+        String response = assertMessagesReceived("No response for update").get(0);
+        Assert.assertTrue("Message was received for update but was not a update-success, was instead " + response, response.contains("update-success"));
         return response;
     }
 }

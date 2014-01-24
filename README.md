@@ -36,6 +36,11 @@ Subscriptions are initiated by the client with a subscribe with the following pr
     <td>The type of resource for the subscription</td>
   </tr>
   <tr>
+    <td>resource-id</td>
+    <td>String</td>
+    <td>Optionally specify an id so only one resource is returned</td>
+  </tr>
+  <tr>
     <td>filter</td>
     <td>unknown</td>
     <td>The filter which will be evaluated to determine if resources match the subscription</td>
@@ -240,7 +245,7 @@ To create a resource the client sends a message with the following properties:
   <tr>
     <td>resource-type</td>
     <td>String</td>
-    <td>The type of resource for the subscription</td>
+    <td>The type of resource for the creation</td>
   </tr>
   <tr>
     <td>resource</td>
@@ -285,9 +290,76 @@ TODO
 
 ### Read ###
 
-TODO
+TODO Not convinced a one time read is necessary as you can read a single resource with subscribe
 
 ### Update ###
+
+To update an existing resource the client sends through a message with the following properties
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Description or <em>Content</em></th>
+  </tr>
+  <tr>
+    <td>message-type</td>
+    <td>String</td>
+    <td><em>update</em></td>
+  </tr>
+  <tr>
+    <td>client-id</td>
+    <td>String</td>
+    <td>A string which will be included in the server's response</td>
+  </tr>
+  <tr>
+    <td>resource-id</td>
+    <td>String</td>
+    <td>The server side id of the resource to update</td>
+  </tr>
+  <tr>
+    <td>resource-type</td>
+    <td>String</td>
+    <td>The type of resource to update</td>
+  </tr>
+  <tr>
+    <td>resource</td>
+    <td>Object</td>
+    <td>The new state of the resource</td>
+  </tr>
+</table>
+
+The response for a successful update will have the following properties:
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Description or <em>Content</em></th>
+  </tr>
+  <tr>
+    <td>message-type</td>
+    <td>String</td>
+    <td><em>update-success</em></td>
+  </tr>
+  <tr>
+    <td>client-id</td>
+    <td>String</td>
+    <td>The client-id provided by the client in the update message</td>
+  </tr>
+  <tr>
+    <td>resource-id</td>
+    <td>String</td>
+    <td>The server side id of the updated resource</td>
+  </tr>
+  <tr>
+    <td>resource</td>
+    <td>Object</td>
+    <td>The updated resource</td>
+  </tr>
+</table>
+
+The response if update failed will contain the following:
 
 TODO
 
